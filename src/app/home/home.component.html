@@ -1,0 +1,87 @@
+<!-- HTML -->
+<div class="page-wrapper d-flex flex-column min-vh-100">
+  <header class="header">
+    <h1>Certificati Rapidi</h1>
+  </header>
+
+  <main class="flex-grow-1 main-content">
+    <div class="section-title text-center py-4">
+      <h1>Certificati rapidi, risultati immediati.</h1>
+    </div>
+
+    <div
+      class="container d-flex justify-content-center align-items-center py-5"
+    >
+      <a [routerLink]="'/form'" class="logo-container">
+        <img
+          #logo
+          class="logo"
+          src="/public/logo.png"
+          alt="Logo CertificatiRapidi"
+        />
+      </a>
+    </div>
+
+    <div class="services-overview container my-5">
+      <div class="students-card p-4 mb-4">
+        <h2 class="card-title mb-3">I nostri servizi</h2>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="detail-item p-3">
+              <i class="material-icons me-2">verified</i>
+              <strong>Certificati digitali</strong>
+              <p>Certificati digitali pronti in pochi minuti</p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="detail-item p-3">
+              <i class="material-icons me-2">person_search</i>
+              <strong>Archivio Studenti</strong>
+              <p>
+                Gli studenti vengono salvati per recuperare i certificati in
+                qualsiasi momento
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="detail-item p-3">
+              <i class="material-icons me-2">table_chart</i>
+              <strong>Esportazione Excel</strong>
+              <p>
+                Tutti i dati possono essere esportati in formato CSV compatibile
+                con Excel
+                <img
+                  src="/public/excel-logo.png"
+                  alt="Excel"
+                  width="16"
+                  height="16"
+                  class="ms-1"
+                />
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="text-center mt-3">
+          <button class="btn-primary me-2">Scopri di più</button>
+          <button class="btn-accent">Contattaci</button>
+        </div> -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer mt-auto py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          &copy; 2025 CertificatiRapidi di Antonino Tripodi. Tutti i diritti
+          riservati.
+        </div>
+        <!-- <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="btn-view me-2">Privacy</a>
+          <a href="#" class="btn-view me-2">Termini</a>
+          <a href="#" class="btn-view">Contatti</a>
+        </div> -->
+      </div>
+    </div>
+  </footer>
+</div>

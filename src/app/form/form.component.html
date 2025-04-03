@@ -1,0 +1,367 @@
+<div class="header">
+  <h1>Certificati d'inglese</h1>
+</div>
+
+<div class="container-fluid px-3">
+  <mat-expansion-panel #expansionPanel class="overflow-visible custom-panel">
+    <mat-expansion-panel-header class="form-container p-4 mt-4">
+      <div class="d-flex align-items-center">
+        <mat-icon class="me-2">person_add</mat-icon>
+        <span class="panel-title">Aggiungi Studente</span>
+      </div>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="position-relative overflow-visible">
+        <form
+          [formGroup]="form"
+          class="position-absolute top-0 start-0 picone bg-light z-3 p-4 form-container"
+          [ngStyle]="{
+            'width.px': expansionPanel._body?.nativeElement?.clientWidth
+          }"
+        >
+          <div class="row g-3">
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="name" required />
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cognome</mat-label>
+                <input matInput formControlName="cognome" required />
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Data di nascita</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  formControlName="dataNascita"
+                  required
+                  (keypress)="formatDate($event)"
+                  [maxLength]="10"
+                  [minlength]="10"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error>Inserisci una data valida</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Codice fiscale</mat-label>
+                <input matInput formControlName="codiceFiscale" required />
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" required />
+                <mat-error>Inserisci un'email valida</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Data di rilascio</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="rilascio"
+                  formControlName="dataRilascio"
+                  (dateChange)="onDataRilascioChange($event)"
+                  required
+                  (keypress)="formatDate($event)"
+                  [maxLength]="10"
+                  [minlength]="10"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="rilascio"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #rilascio></mat-datepicker>
+                <mat-error>Inserisci una data valida</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Validità</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [matDatepicker]="validita"
+                  formControlName="validita"
+                  required
+                />
+                <mat-datepicker-toggle
+                  disabled
+                  matSuffix
+                  [for]="validita"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #validita></mat-datepicker>
+                <mat-error>Inserisci una data valida</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Direttore del Corso</mat-label>
+                <mat-select formControlName="direttore" required>
+                  <mat-option value="Picone">Picone</mat-option>
+                  <mat-option value="Rocca">Rocca</mat-option>
+                  <mat-option value="Faini">Faini</mat-option>
+                </mat-select>
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Istruttore</mat-label>
+                <mat-select formControlName="istruttore" required>
+                  <mat-option value="Picone">Picone</mat-option>
+                  <mat-option value="Rocca">Rocca</mat-option>
+                  <mat-option value="Faini">Faini</mat-option>
+                </mat-select>
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Codice Certificato</mat-label>
+                <input matInput formControlName="codiceCertificato" required />
+                <mat-error>Campo obbligatorio!</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-4 gap-3 flex-wrap">
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="form.invalid"
+              (click)="onSubmit()"
+              class="btn-primary"
+            >
+              <mat-icon class="me-1">save</mat-icon> Salva studente
+            </button>
+            <button
+              mat-raised-button
+              color="accent"
+              [disabled]="form.invalid"
+              (click)="generatePdf()"
+              class="btn-accent"
+            >
+              <mat-icon class="me-1">print</mat-icon> Stampa Certificato
+            </button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <div class="d-flex justify-content-center mt-5">
+    <h4 class="section-title">Cerca Studenti</h4>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-label>Filtra</mat-label>
+      <input
+        matInput
+        (keyup)="search($event)"
+        placeholder="Cerca per nome, cognome o certificato..."
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <mat-card class="mt-5 p-4 students-card">
+    <h3 class="mb-4 card-title">
+      <mat-icon class="me-2">school</mat-icon>
+      Studenti salvati
+    </h3>
+    <div class="table-responsive">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z2"
+        matSort
+      >
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="cognome">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cognome</th>
+          <td mat-cell *matCellDef="let element">{{ element.cognome }}</td>
+        </ng-container>
+        <ng-container matColumnDef="NumeroCertificazione">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Numero Certificazione
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.codiceCertificato }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
+          <td mat-cell *matCellDef="let element" class="text-center">
+            <div class="d-flex justify-content-center">
+              <button
+                matTooltip="Elimina Studente"
+                mat-icon-button
+                class="btn-delete"
+                (click)="deleteData(element); $event.stopPropagation()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                matTooltip="Visualizza Studente"
+                mat-icon-button
+                class="btn-view"
+                (click)="openDetailModal(element); $event.stopPropagation()"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                matTooltip="Inserisci Studente"
+                mat-icon-button
+                class="btn-add"
+                (click)="
+                  populateForm(element);
+                  expansionPanel.open();
+                  $event.stopPropagation()
+                "
+              >
+                <mat-icon>add_diamond</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="[
+            'id',
+            'name',
+            'cognome',
+            'NumeroCertificazione',
+            'actions'
+          ]"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: [
+              'id',
+              'name',
+              'cognome',
+              'NumeroCertificazione',
+              'actions'
+            ]
+          "
+          class="table-row-hover"
+        ></tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      [length]="dataSource.data.length"
+      showFirstLastButtons
+      aria-label="Seleziona pagina di studenti"
+    ></mat-paginator>
+    <div class="d-flex justify-content-end mt-4">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="saveToFile()"
+        class="btn-primary"
+      >
+        <mat-icon>download</mat-icon> Salva Csv
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<div
+  class="modal fade"
+  id="detailModal"
+  tabindex="-1"
+  aria-labelledby="detailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-3">
+      <div class="modal-header text-black">
+        <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
+          <i class="bi bi-info-circle me-2"></i> Dettagli Studente
+        </h5>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-lg-6 col-md-6 col-12">
+            <p class="detail-item">
+              <i class="bi bi-person-fill"></i>
+              <strong>Nome: </strong> <span id="modal-name"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-person-fill"></i>
+              <strong>Cognome: </strong> <span id="modal-cognome"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-calendar"></i>
+              <strong>Data di Nascita: </strong>
+              <span id="modal-birthdate"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-credit-card"></i>
+              <strong>Codice Fiscale: </strong> <span id="modal-cf"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-envelope"></i>
+              <strong>Email: </strong> <span id="modal-email"></span>
+            </p>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <p class="detail-item">
+              <i class="bi bi-calendar-check"></i>
+              <strong>Data Rilascio: </strong> <span id="modal-rilascio"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-hourglass-split"></i>
+              <strong>Validità: </strong> <span id="modal-validita"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-person-badge"></i>
+              <strong>Direttore del Corso: </strong>
+              <span id="modal-direttore"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-person-check"></i>
+              <strong>Istruttore: </strong> <span id="modal-istruttore"></span>
+            </p>
+            <p class="detail-item">
+              <i class="bi bi-award"></i>
+              <strong>Codice Certificato: </strong>
+              <span id="modal-codiceCertificato"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
