@@ -78,7 +78,7 @@ export const IT_DATE_FORMATS = {
     MatExpansionModule,
     MatTooltip,
   ],
-  templateUrl: './form.component.html',
+  templateUrl:   './form.component.html',
   styleUrls: ['./form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [

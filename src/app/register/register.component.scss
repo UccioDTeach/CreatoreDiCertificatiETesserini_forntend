@@ -1,0 +1,278 @@
+// Import (assicurati che il percorso sia corretto o che siano globali)
+// @import 'path/to/variables';
+
+// Variabili (le lascio qui per completezza, ma idealmente in un file separato)
+$primary-color: #1a3a5f;
+$secondary-color: #2e6ca4;
+$accent-color: #ff9800; // Aggiunta per btn-accent
+$background-light: #f5f8fb;
+$border-light: #e0e5eb;
+$background-white: #ffffff;
+$hover-color: #edf2f7;
+$error-color: #d32f2f;
+$success-color: #4caf50;
+$text-color-light: #ffffff;
+$text-color-dark: #333333;
+$title-font: "Georgia", serif;
+$body-font: "Calibri", sans-serif;
+
+// Stili globali per la pagina/contenitore
+.registration-page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Assicura che il footer stia in basso
+  background-color: $background-light;
+}
+
+.app-header {
+  background-color: $primary-color;
+  color: $text-color-light;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin: 0;
+    font-family: $title-font;
+    font-size: 1.8rem;
+  }
+}
+
+.main-content {
+  flex: 1; // Fa espandere il contenuto principale per spingere il footer in basso
+}
+
+.app-footer {
+  background-color: darken($primary-color, 5%);
+  color: rgba($text-color-light, 0.8);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: auto; // Spinge il footer in basso se il contenuto è poco
+}
+
+// Stili specifici del componente di registrazione
+.custom-panel {
+  background-color: $background-white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  margin: 0 auto; // Centra il pannello se il container è più largo
+  max-width: 600px; // Limita la larghezza massima del form
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .section-title {
+    font-family: $title-font;
+    color: $primary-color;
+    position: relative;
+    padding-bottom: 12px;
+    font-weight: 600;
+    font-size: 1.6rem; // Leggermente più grande
+    text-align: center;
+    margin: 25px 0 20px 0; // Aggiustato margine
+
+    @media (max-width: 576px) {
+      font-size: 1.3rem;
+    }
+
+    // Sottolineatura decorativa
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%; // Centrato
+      transform: translateX(-50%); // Centrato
+      width: 60px; // Larghezza fissa per la linea
+      height: 3px;
+      background: linear-gradient(to right, $primary-color, $secondary-color);
+      border-radius: 3px;
+    }
+  }
+
+  .panel-body {
+    padding: 25px 30px; // Padding interno per il form
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+  }
+
+  // Stili per il form interno
+  form {
+    mat-form-field {
+      width: 100%; // Già presente, ma riaffermato nel contesto
+      margin-bottom: 10px; // Ridotto leggermente il margine
+
+      // Input e Select interni
+      .mat-mdc-text-field-wrapper, // Stili per il wrapper del campo Material
+      input,
+      mat-select {
+        font-family: $body-font;
+        font-size: 1rem; // Standardizzato font-size
+      }
+
+      // Messaggi di errore
+      mat-error {
+        color: $error-color;
+        font-size: 0.75rem; // Leggermente più piccolo
+        font-family: $body-font;
+        margin-top: -10px; // Avvicina l'errore al campo
+        margin-bottom: 5px; // Spazio sotto l'errore
+      }
+    }
+
+    .action-buttons {
+      gap: 10px; // Aggiunge spazio tra i pulsanti se ce ne sono più di uno
+
+      // Stili comuni dei bottoni (se usi mat-button o classi custom)
+      button {
+        border-radius: 6px;
+        padding: 10px 24px;
+        font-family: $body-font;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600; // Leggermente più bold
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        &:disabled {
+          background-color: #cccccc !important; // Usa !important se necessario per sovrascrivere Material
+          background-image: none !important;
+          color: #888888 !important;
+          transform: none;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+
+        @media (max-width: 576px) {
+          padding: 8px 16px;
+          font-size: 0.9rem;
+        }
+      }
+
+      // Bottone Primario
+      .btn-primary {
+        background: linear-gradient(to right, $primary-color, $secondary-color);
+        color: $text-color-light;
+
+        &:hover:not(:disabled) {
+           background: linear-gradient(to right, darken($primary-color, 5%), darken($secondary-color, 5%));
+        }
+      }
+
+      // Bottone Secondario/Accent (Esempio)
+      .btn-secondary {
+        background-color: $background-light;
+        color: $primary-color;
+        border: 1px solid $border-light;
+
+         &:hover:not(:disabled) {
+           background-color: $hover-color;
+           border-color: darken($border-light, 10%);
+         }
+      }
+
+       .btn-accent { // Se vuoi usare un colore accent
+         background: linear-gradient(to right, $accent-color, darken($accent-color, 10%));
+         color: $text-color-light; // O dark a seconda del colore accent
+
+         &:hover:not(:disabled) {
+           background: linear-gradient(to right, darken($accent-color, 5%), darken($accent-color, 15%));
+         }
+       }
+    }
+  }
+}
+
+// Override specifici per Angular Material (::ng-deep)
+// Usare con cautela, preferire la personalizzazione tramite API Material se possibile
+:host ::ng-deep {
+  // Rimuove padding extra sotto il form field
+  .mat-mdc-form-field-subscript-wrapper {
+    height: 0;
+    // O se vuoi un minimo spazio:
+    // min-height: 1.3em; // O quanto necessario per l'errore
+    // .mat-mdc-form-field-error-wrapper { padding-top: 5px; }
+  }
+
+  // Colore del bordo e label quando non focusato
+  .mat-mdc-form-field:not(.mat-focused) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+       border-color: $border-light; // Bordo più leggero di default
+    }
+     .mdc-floating-label {
+        color: rgba($text-color-dark, 0.6); // Label più chiara
+     }
+  }
+
+  // Colore del bordo e label quando focusato
+  .mat-mdc-form-field.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $primary-color !important; // Bordo primario
+      border-width: 2px; // Bordo più spesso su focus
+    }
+    .mdc-floating-label {
+      color: $primary-color !important; // Label primaria su focus
+    }
+  }
+
+   // Colore del bordo in caso di errore
+  .mat-mdc-form-field.mat-form-field-invalid.mat-focused {
+     .mdc-notched-outline__leading,
+     .mdc-notched-outline__notch,
+     .mdc-notched-outline__trailing {
+       border-color: $error-color !important; // Bordo errore
+     }
+     .mdc-floating-label {
+       color: $error-color !important; // Label errore
+     }
+   }
+   .mat-mdc-form-field.mat-form-field-invalid:not(.mat-focused) {
+       .mdc-notched-outline__leading,
+       .mdc-notched-outline__notch,
+       .mdc-notched-outline__trailing {
+         border-color: $error-color !important; // Bordo errore anche non focusato
+       }
+       .mdc-floating-label {
+         color: $error-color !important; // Label errore anche non focusata
+       }
+   }
+}
+
+// Media Queries per Responsive generale del layout del form
+@media (max-width: 768px) {
+  .custom-panel {
+    margin: 20px 15px; // Margine laterale su schermi piccoli
+  }
+  .action-buttons {
+    flex-direction: column; // Pulsanti uno sotto l'altro
+    align-items: stretch; // Pulsanti a larghezza piena
+
+    button {
+       width: 100%;
+       margin-bottom: 10px; // Spazio tra i pulsanti in colonna
+       &:last-child {
+          margin-bottom: 0;
+       }
+    }
+
+  }
+}

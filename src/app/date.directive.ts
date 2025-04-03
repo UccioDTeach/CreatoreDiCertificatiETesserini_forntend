@@ -1,16 +1,15 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import dayjs from 'dayjs';
-import 'dayjs/locale/it'; // Importa la lingua italiana
-
+import 'dayjs/locale/it'; 
 @Directive({
-  selector: 'input[matDatepicker]', // Selettore per tutti gli input con MatDatepicker
+  selector: 'input[matDatepicker]', 
 })
 export class DateDirective {
-  private dateFormat = 'DD/MM/YYYY'; // Formato italiano
+  private dateFormat = 'DD/MM/YYYY'; 
 
   constructor(private el: ElementRef, private control: NgControl) {
-    dayjs.locale('it'); // Imposta la lingua italiana per Dayjs
+    dayjs.locale('it'); 
   }
 
   @HostListener('blur') onBlur() {
