@@ -40,11 +40,11 @@ export class AuthService {
       })
       .pipe(
         tap((response: UtenteRegistrato) => {
-          this.user.set(response); // Imposta l'utente registrato
+          this.user.set(response);
         }),
         catchError((error) => {
           this.user.set(null);
-          return throwError(() => error); // Gestisci l'errore e restituisci null
+          return throwError(() => error);
         })
       );
   }
@@ -56,31 +56,25 @@ export class AuthService {
       })
       .pipe(
         tap((response: UtenteRegistrato) => {
-          this.user.set(response); // Imposta l'utente loggato
+          this.user.set(response);
         }),
         catchError((error) => {
           this.user.set(null);
-          return throwError(() => error); // Gestisci l'errore e restituisci null
+          return throwError(() => error);
         })
       );
   }
 
   logout() {
     return this.http
-      .post<UtenteRegistrato>(`${this.url}/login`, user, {
-        withCredentials: true,
-      })
-      .pipe(
-        tap((response: UtenteRegistrato) => {
-          this.user.set(response); // Imposta l'utente loggato
-        }),
-        catchError((error) => {
-          this.user.set(null);
-          return throwError(() => error); // Gestisci l'errore e restituisci null
-        })
-      );
-    this.user.set(null); // Resetta l'utente loggato
-    return of(true); // Restituisci un Observable di successo
+      .post<UtenteRegistrato>(
+        `${this.url}/logout`,
+        {},
+        { withCredentials: true }
+      )
+      .subscribe(() => {
+        window.location.reload();
+      });
   }
 
   me() {

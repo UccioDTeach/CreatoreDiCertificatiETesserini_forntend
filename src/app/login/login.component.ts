@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 // Rimuovi UtenteRegistratoSerivce se non serve specificamente qui per il login
 // import { UtenteRegistratoSerivce } from '../service/utente.service';
 import Swal from 'sweetalert2';
@@ -19,12 +24,12 @@ import { HttpErrorResponse } from '@angular/common/http'; // <-- Importa per tip
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
     // Aggiungi CommonModule se usi *ngIf etc. nel template
     // import { CommonModule } from '@angular/common';
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'] // Nota: styleUrls (plurale) è più comune
+  styleUrls: ['./login.component.scss'], // Nota: styleUrls (plurale) è più comune
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -36,10 +41,10 @@ export class LoginComponent {
     // private loginService: LoginService, // Inietta AuthService invece se gestisce la chiamata
     private authService: AuthService, // <-- Inietta AuthService
     private router: Router // Router è ancora necessario se la navigazione non è dentro AuthService.login
-    ) {
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -62,28 +67,29 @@ export class LoginComponent {
       next: (response) => {
         console.log('Login avvenuto con successo:', response);
 
-      this.router.navigate(['/home']);  
-
+        this.router.navigate(['/home']);
 
         Swal.fire({
-           icon: 'success',
-           title: 'Login effettuato!',
-           showConfirmButton: false,
-           timer: 1500
-         });
-
+          icon: 'success',
+          title: 'Login effettuato!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       },
-      error: (err: HttpErrorResponse) => { // Tipizza l'errore
-        console.error("Errore durante il login:", err);
+      error: (err: HttpErrorResponse) => {
+        // Tipizza l'errore
+        console.error('Errore durante il login:', err);
         this.submitted = false; // Permetti nuovi tentativi
 
         // Estrai un messaggio di errore più significativo
-        let errorMessage = 'Si è verificato un errore durante il login. Riprova più tardi.';
-        if (err.status === 401) { // 401 Unauthorized è comune per credenziali errate
+        let errorMessage =
+          'Si è verificato un errore durante il login. Riprova più tardi.';
+        if (err.status === 401) {
+          // 401 Unauthorized è comune per credenziali errate
           errorMessage = 'Email o password non validi.';
         } else if (err.error && err.error.message) {
-           // Se il backend manda un messaggio specifico nel corpo dell'errore
-           errorMessage = err.error.message;
+          // Se il backend manda un messaggio specifico nel corpo dell'errore
+          errorMessage = err.error.message;
         }
 
         this.loginError = errorMessage; // Per mostrarlo nel template (opzionale)
@@ -96,5 +102,9 @@ export class LoginComponent {
         // AuthService.login dovrebbe già aver gestito lo stato (mantenendolo a false)
       },
     });
+  }
+
+  goToRegistration() {
+    this.router.navigate(['/register']);
   }
 }

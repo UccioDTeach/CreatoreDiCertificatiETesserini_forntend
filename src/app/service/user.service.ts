@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import Utente from '../../config/utente.model';
 
-@Injectable({ 
+@Injectable({
   providedIn: 'root',
 })
 export class UserService {
@@ -21,6 +21,8 @@ export class UserService {
   }
 
   deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:3000/users/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`http://localhost:3000/api/users/${id}`, {
+      withCredentials: true,
+    });
   }
 }

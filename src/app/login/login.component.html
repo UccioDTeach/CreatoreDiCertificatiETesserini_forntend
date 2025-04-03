@@ -1,63 +1,86 @@
 <div class="registration-page-container">
-    <header class="app-header">
-      <div class="container">
-        <h1>CertGenerator</h1>
-      </div>
-    </header>
-  
-    <main class="main-content">
-      <div class="container py-5">
-        <div class="custom-panel">
-          <h2 class="section-title text-center mb-4">Login</h2>
-  
-          <div class="panel-body">
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-              <div class="row g-3">
-                <div class="col-12">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Email</mat-label>
-                    <input matInput id="email" formControlName="email" type="email" placeholder="es. mario.rossi@email.com">       
-                  </mat-form-field>
-                  @if (f['email'].errors) {
-                    @if (f['email'].errors['required']) {
-                      <mat-error>L'email è obbligatoria</mat-error>
-                    }
-                    @if (f['email'].errors['email']) {
-                      <mat-error>Inserire un'email valida</mat-error>
-                    }
-                  }
-                </div>
-  
-                <div class="col-12">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Password</mat-label>
-                    <input matInput id="password" formControlName="password" type="password" placeholder="Minimo 6 caratteri">
-                  </mat-form-field>
-                  @if ( f['password'].errors) {
-                    @if (f['password'].errors['required']) {
-                      <mat-error>La password è obbligatoria</mat-error>
-                    }
-                    @if (f['password'].errors['minlength']) {
-                      <mat-error>La password deve contenere almeno 6 caratteri</mat-error>
-                    }
-                  }
-                </div>
+  <header class="app-header">
+    <div class="container">
+      <h1>CertGenerator</h1>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container py-5">
+      <div class="custom-panel">
+        <h2 class="section-title text-center mb-4">Accedi</h2>
+
+        <div class="panel-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="row g-3">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    id="email"
+                    formControlName="email"
+                    type="email"
+                    placeholder="es. mario.rossi@email.com"
+                  />
+                </mat-form-field>
+                @if (f['email'].errors) { @if (f['email'].errors['required']) {
+                <mat-error>L'email è obbligatoria</mat-error>
+                } @if (f['email'].errors['email']) {
+                <mat-error>Inserire un'email valida</mat-error>
+                } }
               </div>
-  
-              <div class="d-flex justify-content-end mt-4 action-buttons">
-                <button mat-raised-button type="submit" class="btn-primary" [disabled]="loginForm.invalid">Registrati</button>
-      
+
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    id="password"
+                    formControlName="password"
+                    type="password"
+                    placeholder="Minimo 6 caratteri"
+                  />
+                </mat-form-field>
+                @if ( f['password'].errors) { @if
+                (f['password'].errors['required']) {
+                <mat-error>La password è obbligatoria</mat-error>
+                } @if (f['password'].errors['minlength']) {
+                <mat-error
+                  >La password deve contenere almeno 6 caratteri</mat-error
+                >
+                } }
               </div>
-            </form>
-          </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4 action-buttons">
+              <button
+                mat-raised-button
+                type="submit"
+                class="btn-primary"
+                [disabled]="loginForm.invalid"
+              >
+                Accedi
+              </button>
+              <button
+                mat-raised-button
+                type="submit"
+                (click)="goToRegistration()"
+                class="btn-primary"
+              >
+                Registrati
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </main>
-  
-    <footer class="app-footer">
-      <div class="container">
-        <p>2025 CertificatiRapidi di Antonino Tripodi. Tutti i diritti
-          riservati.</p>
-      </div>
-    </footer>
-  </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>
+        2025 CertificatiRapidi di Antonino Tripodi. Tutti i diritti riservati.
+      </p>
+    </div>
+  </footer>
+</div>
