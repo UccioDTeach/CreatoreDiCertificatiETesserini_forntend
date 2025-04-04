@@ -1,0 +1,101 @@
+$primary-color: #1a3a5f;
+$secondary-color: #2e6ca4;
+$secondary-color-light: #c4e4ff;
+$background-light: #f5f8fb;
+$border-light: #e0e5eb;
+$background-white: #ffffff;
+$hover-color: #edf2f7;
+$error-color: #d32f2f;
+$title-font: "Georgia", serif;
+$body-font: "Calibri", sans-serif;
+$dark-bg: #363636;
+
+.header {
+  background-color: $primary-color;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 10vh;
+  width: 100%;
+  position: fixed; /* Fissa l'header in alto */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px; /* Limita la larghezza massima */
+  }
+
+  .header-title {
+    text-align: center;
+    margin: 0;
+    font-family: $title-font;
+    letter-spacing: 1px;
+    cursor: pointer; /* Indica che è cliccabile */
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: lighten($secondary-color, 20%);
+    }
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Spazio tra gli elementi */
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-family: $body-font;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: $secondary-color-light;
+      }
+    }
+
+    .btn-primary {
+      background-color: $secondary-color;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 20px;
+      font-family: $body-font;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+        background-color: darken($secondary-color, 10%);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .header-nav {
+      gap: 15px;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+    }
+  }
+}

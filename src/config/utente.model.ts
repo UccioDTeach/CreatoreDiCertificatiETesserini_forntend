@@ -10,6 +10,7 @@ type Utente = {
   direttore: string;
   istruttore: string;
   codiceCertificato: string;
+  createdBy: number;
 };
 
 export default Utente;

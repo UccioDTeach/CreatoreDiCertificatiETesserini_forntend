@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -41,6 +41,7 @@ import Swal from 'sweetalert2';
 import { UserService } from '../service/user.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltip } from '@angular/material/tooltip';
+import { AuthService } from '../service/auth.service';
 declare var bootstrap: any;
 
 (pdfMake as any).vfs = pdfFonts.vfs;
@@ -78,7 +79,7 @@ export const IT_DATE_FORMATS = {
     MatExpansionModule,
     MatTooltip,
   ],
-  templateUrl:   './form.component.html',
+  templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [
@@ -105,6 +106,8 @@ export class FormComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<FormGroup>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  authService = inject(AuthService);
+  user = this.authService.user.asReadonly();
 
   constructor(
     private dateAdapter: DateAdapter<Date>,
@@ -126,6 +129,7 @@ export class FormComponent {
       direttore: [undefined, Validators.required],
       istruttore: [undefined, Validators.required],
       codiceCertificato: [undefined, Validators.required],
+      createdBy: [undefined],
     });
   }
 
@@ -227,7 +231,8 @@ export class FormComponent {
   onSubmit() {
     if (this.form.valid) {
       const userData = this.form.value;
-      console.log('Dati inviati:', userData);
+      this.form.value.createdBy = this.user();
+
       this.userService.addUser(userData).subscribe({
         next: () => {
           this.loadUsers();
@@ -237,7 +242,7 @@ export class FormComponent {
           console.error("Errore durante il salvataggio dell'utente:", err);
           Swal.fire(
             'Errore',
-            'Si è verificato un errore durante il salvataggio, un utente con questo codice fiscale esiste già.',
+            'Si è verificato un errore durante il salvataggio o un utente con questo codice fiscale esiste già.',
             'error'
           );
         },
@@ -357,6 +362,7 @@ export class FormComponent {
       direttore: element.direttore,
       istruttore: element.istruttore,
       codiceCertificato: element.codiceCertificato,
+      createdBy: element.createdBy,
     });
   }
 

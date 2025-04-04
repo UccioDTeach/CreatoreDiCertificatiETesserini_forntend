@@ -1,0 +1,18 @@
+<header class="header">
+  <div class="header-container">
+    <h1 (click)="navigateTo('/')" class="header-title">Certificati Rapidi</h1>
+    <nav class="header-nav">
+      @if (router.url !== '/home') {
+      <a (click)="navigateTo('/')" class="nav-link">Home</a>
+      } @if (router.url !== '/chi-siamo') {
+      <a (click)="navigateTo('/chi-siamo')" class="nav-link">Chi Siamo</a>
+      } @if(!user()) {
+      <button class="btn btn-primary" (click)="navigateTo('/auth')">
+        Login
+      </button>
+      } @else{
+      <button class="btn btn-primary" (click)="logout()">Logout</button>
+      }
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,157 @@
+<div class="registration-page-container">
+  <main class="main-content">
+    <div class="container py-5">
+      <!-- Messaggio di benvenuto -->
+      <div class="welcome-message">
+        <h2>Accedi o registrati per continuare</h2>
+      </div>
+
+      <div class="auth-container">
+        <!-- Login Panel -->
+        <div class="custom-panel">
+          <div class="section-header">
+            <mat-icon>login</mat-icon>
+            <h2 class="section-title">Accedi</h2>
+          </div>
+
+          <div class="panel-body">
+            <form [formGroup]="loginForm">
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Email</mat-label>
+                  <mat-icon matPrefix>email</mat-icon>
+                  <input
+                    matInput
+                    id="login-email"
+                    formControlName="email"
+                    type="email"
+                    placeholder="es. mario.rossi@email.com"
+                  />
+                </mat-form-field>
+                @if (fLogin['email'].errors && submitted) { @if
+                (fLogin['email'].errors['required']) {
+                <mat-error>L'email è obbligatoria</mat-error>
+                } @if (fLogin['email'].errors['email']) {
+                <mat-error>Inserire un'email valida</mat-error>
+                } }
+              </div>
+
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Password</mat-label>
+                  <mat-icon matPrefix>lock</mat-icon>
+                  <input
+                    matInput
+                    VND
+                    id="login-password"
+                    formControlName="password"
+                    type="password"
+                    placeholder="Minimo 6 caratteri"
+                  />
+                </mat-form-field>
+                @if (fLogin['password'].errors && submitted) { @if
+                (fLogin['password'].errors['required']) {
+                <mat-error>La password è obbligatoria</mat-error>
+                } @if (fLogin['password'].errors['minlength']) {
+                <mat-error
+                  >La password deve contenere almeno 6 caratteri</mat-error
+                >
+                } }
+              </div>
+
+              @if (loginError) {
+              <div class="alert alert-danger">
+                {{ loginError }}
+              </div>
+              }
+
+              <div class="action-buttons">
+                <button
+                  mat-raised-button
+                  (click)="onSubmitLogin()"
+                  class="btn-primary"
+                  [disabled]="loginForm.invalid"
+                >
+                  Accedi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Registration Panel -->
+        <div class="custom-panel">
+          <div class="section-header">
+            <mat-icon>person_add</mat-icon>
+            <h2 class="section-title">Registrazione</h2>
+          </div>
+
+          <div class="panel-body">
+            <form [formGroup]="registerForm">
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Email</mat-label>
+                  <mat-icon matPrefix>email</mat-icon>
+                  <input
+                    matInput
+                    id="register-email"
+                    formControlName="email"
+                    type="email"
+                    placeholder="es. mario.rossi@email.com"
+                  />
+                </mat-form-field>
+                @if (fRegister['email'].errors && submitted) { @if
+                (fRegister['email'].errors['required']) {
+                <mat-error>L'email è obbligatoria</mat-error>
+                } @if (fRegister['email'].errors['email']) {
+                <mat-error>Inserire un'email valida</mat-error>
+                } }
+              </div>
+
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Password</mat-label>
+                  <mat-icon matPrefix>lock</mat-icon>
+                  <input
+                    matInput
+                    id="register-password"
+                    formControlName="password"
+                    type="password"
+                    placeholder="Minimo 6 caratteri"
+                  />
+                </mat-form-field>
+                @if (fRegister['password'].errors && submitted) { @if
+                (fRegister['password'].errors['required']) {
+                <mat-error>La password è obbligatoria</mat-error>
+                } @if (fRegister['password'].errors['minlength']) {
+                <mat-error
+                  >La password deve contenere almeno 6 caratteri</mat-error
+                >
+                } }
+              </div>
+
+              <div class="action-buttons">
+                <button
+                  mat-raised-button
+                  (click)="onSubmitRegister()"
+                  class="btn-register"
+                  [disabled]="registerForm.invalid"
+                >
+                  Registrati
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>
+        2025 CertificatiRapidi di Antonino Tripodi. Tutti i diritti riservati.
+      </p>
+    </div>
+  </footer>
+</div>

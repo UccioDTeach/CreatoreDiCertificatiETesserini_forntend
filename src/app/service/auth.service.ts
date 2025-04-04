@@ -82,11 +82,11 @@ export class AuthService {
       .get<UtenteRegistrato>(`${this.url}/me`, { withCredentials: true })
       .pipe(
         tap((response: UtenteRegistrato) => {
-          this.user.set(response); // Imposta l'utente loggato
+          this.user.set(response);
         }),
         catchError((error) => {
           this.user.set(null);
-          return throwError(() => error); // Gestisci l'errore e restituisci null
+          return throwError(() => error);
         })
       );
   }

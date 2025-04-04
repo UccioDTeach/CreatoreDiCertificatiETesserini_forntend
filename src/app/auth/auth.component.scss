@@ -1,0 +1,365 @@
+// Variabili (le stesse del file originale)
+$primary-color: #1a3a5f;
+$secondary-color: #2e6ca4;
+$accent-color: #ff9800;
+$background-light: #f5f8fb;
+$border-light: #e0e5eb;
+$background-white: #ffffff;
+$hover-color: #edf2f7;
+$error-color: #d32f2f;
+$success-color: #4caf50;
+$text-color-light: #ffffff;
+$text-color-dark: #333333;
+$title-font: "Playfair Display", serif;
+$body-font: "Roboto", sans-serif;
+
+// Stili globali per la pagina/contenitore
+.registration-page-container {
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: $background-light;
+}
+
+.app-header {
+  background-color: $primary-color;
+  color: $text-color-light;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin: 0;
+    font-family: $title-font;
+    font-size: 1.8rem;
+  }
+}
+
+.main-content {
+  flex: 1;
+}
+
+// Messaggio di benvenuto
+.welcome-message {
+  text-align: center;
+  margin-bottom: 40px;
+
+  h2 {
+    font-family: $title-font;
+    color: $primary-color;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-family: $body-font;
+    color: $text-color-dark;
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+}
+
+.auth-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.app-footer {
+  background-color: darken($primary-color, 5%);
+  color: rgba($text-color-light, 0.8);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+// Stili specifici del componente di registrazione e login
+.custom-panel {
+  background-color: $background-white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 100%;
+  max-width: 450px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in;
+
+  &:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 0 20px;
+
+    mat-icon {
+      font-size: 2rem;
+      color: $accent-color;
+      margin-right: 10px;
+      height: auto;
+      width: auto;
+    }
+
+    .section-title {
+      font-family: $title-font;
+      color: $primary-color;
+      position: relative;
+      padding-bottom: 12px;
+      font-weight: 600;
+      font-size: 1.6rem;
+      text-align: center;
+      margin: 0;
+
+      @media (max-width: 576px) {
+        font-size: 1.3rem;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(to right, $primary-color, $secondary-color);
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .panel-body {
+    padding: 25px 30px;
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .alert {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+
+    &.alert-danger {
+      background-color: lighten($error-color, 45%);
+      color: $error-color;
+      border: 1px solid lighten($error-color, 35%);
+    }
+  }
+
+  form {
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 15px;
+
+      .mat-mdc-text-field-wrapper,
+      input,
+      mat-select {
+        font-family: $body-font;
+        font-size: 1rem;
+      }
+
+      mat-icon {
+        color: $primary-color;
+        margin-right: 10px;
+      }
+
+      mat-error {
+        color: $error-color;
+        font-size: 0.75rem;
+        font-family: $body-font;
+        margin-top: -10px;
+        margin-bottom: 5px;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      gap: 10px;
+
+      button {
+        border-radius: 6px;
+        padding: 10px 24px;
+        font-family: $body-font;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        &:disabled {
+          background-color: #cccccc !important;
+          color: #888888 !important;
+          transform: none;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+
+        @media (max-width: 576px) {
+          padding: 8px 16px;
+          font-size: 0.9rem;
+        }
+      }
+
+      .btn-primary {
+        background: linear-gradient(to right, $primary-color, $secondary-color);
+        color: $text-color-light;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(
+            to right,
+            darken($primary-color, 5%),
+            darken($secondary-color, 5%)
+          );
+        }
+      }
+
+      .btn-register {
+        background: linear-gradient(
+          to right,
+          $accent-color,
+          darken($accent-color, 10%)
+        );
+        color: $text-color-dark;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(
+            to right,
+            darken($accent-color, 5%),
+            darken($accent-color, 15%)
+          );
+        }
+      }
+    }
+  }
+}
+
+// Animazione di dissolvenza
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Override specifici per Angular Material
+:host ::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper {
+    height: 0;
+  }
+
+  .mat-mdc-form-field:not(.mat-focused) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $border-light;
+    }
+    .mdc-floating-label {
+      color: rgba($text-color-dark, 0.6);
+    }
+  }
+
+  .mat-mdc-form-field.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $primary-color !important;
+      border-width: 2px;
+    }
+    .mdc-floating-label {
+      color: $primary-color !important;
+    }
+  }
+
+  .mat-mdc-form-field.mat-form-field-invalid.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $error-color !important;
+    }
+    .mdc-floating-label {
+      color: $error-color !important;
+    }
+  }
+  .mat-mdc-form-field.mat-form-field-invalid:not(.mat-focused) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $error-color !important;
+    }
+    .mdc-floating-label {
+      color: $error-color !important;
+    }
+  }
+}
+
+// Media Queries per il layout responsive
+@media (max-width: 992px) {
+  .auth-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .custom-panel {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-panel {
+    margin: 20px 15px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .welcome-message {
+    h2 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+  }
+}

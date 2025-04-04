@@ -5,70 +5,65 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-// Rimuovi UtenteRegistratoSerivce se non serve specificamente qui per il login
-// import { UtenteRegistratoSerivce } from '../service/utente.service';
 import Swal from 'sweetalert2';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-// Rimuovi LoginService se AuthService gestisce la chiamata API di login
-// import { LoginService } from '../service/login.service';
 import { AuthService } from '../service/auth.service';
-import { HttpErrorResponse } from '@angular/common/http'; // <-- Importa per tipizzare l'errore
-
+import { HttpErrorResponse } from '@angular/common/http';
+import UtenteRegistrato from '../../config/utenteRegistrato.model';
+import { MatIcon } from '@angular/material/icon';
 @Component({
-  selector: 'app-login',
-  standalone: true, // Assumendo che sia standalone basato sull'imports originale
+  selector: 'app-auth',
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    // Aggiungi CommonModule se usi *ngIf etc. nel template
-    // import { CommonModule } from '@angular/common';
+    MatIcon,
   ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'], // Nota: styleUrls (plurale) è più comune
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.scss',
 })
-export class LoginComponent {
+export class AuthComponent {
+  registerForm: FormGroup;
   loginForm: FormGroup;
   submitted = false;
-  loginError: string | null = null; // Per mostrare errori nel template (opzionale)
-
+  loginError: string | null = null;
   constructor(
     private fb: FormBuilder,
-    // private loginService: LoginService, // Inietta AuthService invece se gestisce la chiamata
-    private authService: AuthService, // <-- Inietta AuthService
-    private router: Router // Router è ancora necessario se la navigazione non è dentro AuthService.login
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
   }
 
-  get f() {
+  get fLogin() {
     return this.loginForm.controls;
   }
+  get fRegister() {
+    return this.registerForm.controls;
+  }
 
-  onSubmit(): void {
+  onSubmitLogin(): void {
     this.submitted = true;
-    this.loginError = null; // Resetta l'errore a ogni tentativo
+    this.loginError = null;
     if (this.loginForm.invalid) {
       return;
     }
-
     const userData = this.loginForm.value;
-    console.log('Tentativo di login con:', userData);
-
-    // Usa il metodo login dell'AuthService
     this.authService.login(userData).subscribe({
       next: (response) => {
         console.log('Login avvenuto con successo:', response);
-
         this.router.navigate(['/home']);
-
         Swal.fire({
           icon: 'success',
           title: 'Login effettuato!',
@@ -77,34 +72,51 @@ export class LoginComponent {
         });
       },
       error: (err: HttpErrorResponse) => {
-        // Tipizza l'errore
         console.error('Errore durante il login:', err);
-        this.submitted = false; // Permetti nuovi tentativi
-
-        // Estrai un messaggio di errore più significativo
+        this.submitted = false;
         let errorMessage =
           'Si è verificato un errore durante il login. Riprova più tardi.';
         if (err.status === 401) {
-          // 401 Unauthorized è comune per credenziali errate
           errorMessage = 'Email o password non validi.';
         } else if (err.error && err.error.message) {
-          // Se il backend manda un messaggio specifico nel corpo dell'errore
           errorMessage = err.error.message;
         }
-
-        this.loginError = errorMessage; // Per mostrarlo nel template (opzionale)
-
-        Swal.fire(
-          'Errore di Login',
-          errorMessage, // Usa il messaggio più specifico
-          'error'
-        );
-        // AuthService.login dovrebbe già aver gestito lo stato (mantenendolo a false)
+        this.loginError = errorMessage;
+        Swal.fire('Errore di Login', errorMessage, 'error');
       },
     });
   }
+  onSubmitRegister(): void {
+    this.submitted = true;
+    if (this.registerForm.invalid) {
+      return;
+    }
 
+    const userData = this.registerForm.value;
+
+    this.authService.register(userData).subscribe({
+      next: (response) => {
+        Swal.fire(
+          'Registrazione completata',
+          'Il tuo account è stato creato con successo!',
+          'success'
+        );
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error("Errore durante il salvataggio dell'utente:", err);
+        Swal.fire(
+          'Errore',
+          'Si è verificato un errore durante il salvataggio, un utente con questa email esiste già.',
+          'error'
+        );
+      },
+    });
+  }
   goToRegistration() {
     this.router.navigate(['/register']);
+  }
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 }
