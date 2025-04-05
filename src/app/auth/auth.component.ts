@@ -63,7 +63,7 @@ export class AuthComponent {
     this.authService.login(userData).subscribe({
       next: (response) => {
         console.log('Login avvenuto con successo:', response);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
         Swal.fire({
           icon: 'success',
           title: 'Login effettuato!',
@@ -101,7 +101,7 @@ export class AuthComponent {
           'Il tuo account è stato creato con successo!',
           'success'
         );
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error("Errore durante il salvataggio dell'utente:", err);

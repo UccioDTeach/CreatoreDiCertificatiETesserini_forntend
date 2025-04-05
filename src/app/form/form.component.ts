@@ -108,6 +108,7 @@ export class FormComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   authService = inject(AuthService);
   user = this.authService.user.asReadonly();
+  isEditMode: boolean = false; // Added to track edit mode
 
   constructor(
     private dateAdapter: DateAdapter<Date>,
@@ -119,6 +120,7 @@ export class FormComponent {
     this.dataSource = new MatTableDataSource(this.savedData);
 
     this.form = this.fb.group({
+      id: [undefined],
       name: [undefined, Validators.required],
       cognome: [undefined, Validators.required],
       dataNascita: [Date, Validators.required],
@@ -148,7 +150,7 @@ export class FormComponent {
   }
 
   ngOnInit(): void {
-    this.loadUsers(); // Carica i dati all'inizio
+    this.loadUsers();
     this.dateAdapter.setLocale('it-IT');
   }
 
@@ -164,6 +166,84 @@ export class FormComponent {
     });
   }
 
+  onSubmit() {
+    if (this.form.valid) {
+      const userData = this.form.value;
+      userData.createdBy = this.user();
+
+      if (this.isEditMode) {
+        // Update existing user
+        this.userService.updateUser(userData.id, userData).subscribe({
+          next: () => {
+            this.loadUsers();
+            this.resetForm();
+            Swal.fire(
+              'Aggiornato',
+              'Utente aggiornato con successo!',
+              'success'
+            );
+          },
+          error: (err) => {
+            console.error("Errore durante l'aggiornamento dell'utente:", err);
+            Swal.fire(
+              'Errore',
+              "Si è verificato un errore durante l'aggiornamento dell'utente.",
+              'error'
+            );
+          },
+        });
+      } else {
+        this.userService.addUser(userData).subscribe({
+          next: () => {
+            this.loadUsers();
+            this.resetForm();
+            Swal.fire('Salvato', 'Utente salvato con successo!', 'success');
+          },
+          error: (err) => {
+            console.error("Errore durante il salvataggio dell'utente:", err);
+            Swal.fire(
+              'Errore',
+              'Si è verificato un errore durante il salvataggio o un utente con questo codice fiscale esiste già.',
+              'error'
+            );
+          },
+        });
+      }
+    }
+  }
+
+  // Added editUser method
+  editUser(user: Utente): void {
+    this.isEditMode = true;
+    this.populateForm(user);
+  }
+
+  // Added resetForm method
+  resetForm(): void {
+    this.isEditMode = false;
+    this.form.reset();
+  }
+
+  // Existing methods remain unchanged until populateForm...
+
+  populateForm(element: Utente): void {
+    this.form.patchValue({
+      id: element.id,
+      name: element.name,
+      cognome: element.cognome,
+      dataNascita: new Date(element.dataNascita),
+      codiceFiscale: element.codiceFiscale,
+      email: element.email,
+      dataRilascio: new Date(element.dataRilascio),
+      validita: new Date(element.validita),
+      direttore: element.direttore,
+      istruttore: element.istruttore,
+      codiceCertificato: element.codiceCertificato,
+      createdBy: element.createdBy,
+    });
+  }
+
+  // Rest of the existing methods remain unchanged...
   formatDate(event: any): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/[^0-9]/g, '');
@@ -226,30 +306,6 @@ export class FormComponent {
     return `${d.getDate().toString().padStart(2, '0')} /${(d.getMonth() + 1)
       .toString()
       .padStart(2, '0')}/${d.getFullYear()} `;
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      const userData = this.form.value;
-      this.form.value.createdBy = this.user();
-
-      this.userService.addUser(userData).subscribe({
-        next: () => {
-          this.loadUsers();
-          Swal.fire('Salvato', 'Utente salvato con successo!', 'success');
-        },
-        error: (err) => {
-          console.error("Errore durante il salvataggio dell'utente:", err);
-          Swal.fire(
-            'Errore',
-            'Si è verificato un errore durante il salvataggio o un utente con questo codice fiscale esiste già.',
-            'error'
-          );
-        },
-      });
-    } else {
-      alert('Compila tutti i campi obbligatori.');
-    }
   }
 
   deleteData(data: Utente): void {
@@ -348,22 +404,6 @@ export class FormComponent {
     const validitaDate = new Date(rilascioDate!);
     validitaDate.setFullYear(validitaDate.getFullYear() + 2);
     this.form.controls['validita'].setValue(validitaDate);
-  }
-
-  populateForm(element: Utente): void {
-    this.form.patchValue({
-      name: element.name,
-      cognome: element.cognome,
-      dataNascita: element.dataNascita,
-      codiceFiscale: element.codiceFiscale,
-      email: element.email,
-      dataRilascio: element.dataRilascio,
-      validita: element.validita,
-      direttore: element.direttore,
-      istruttore: element.istruttore,
-      codiceCertificato: element.codiceCertificato,
-      createdBy: element.createdBy,
-    });
   }
 
   search(event: Event) {

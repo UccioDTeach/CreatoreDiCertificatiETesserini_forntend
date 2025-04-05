@@ -1,3 +1,5 @@
+import UtenteRegistrato from './utenteRegistrato.model';
+
 type Utente = {
   id: number;
   name: string;
@@ -10,7 +12,7 @@ type Utente = {
   direttore: string;
   istruttore: string;
   codiceCertificato: string;
-  createdBy: number;
+  createdBy: UtenteRegistrato | null;
 };
 
 export default Utente;

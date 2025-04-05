@@ -3,7 +3,9 @@
     <mat-expansion-panel-header class="form-container p-4 mt-4">
       <div class="d-flex align-items-center">
         <mat-icon class="me-2">person_add</mat-icon>
-        <span class="panel-title">Aggiungi Studente</span>
+        <span class="panel-title">{{
+          isEditMode ? "Modifica Utente" : "Aggiungi Utente"
+        }}</span>
       </div>
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
@@ -14,6 +16,7 @@
           [ngStyle]="{
             'width.px': expansionPanel._body?.nativeElement?.clientWidth
           }"
+          (ngSubmit)="onSubmit()"
         >
           <div class="row g-3">
             <div class="col-md-6 col-12">
@@ -138,20 +141,22 @@
             <button
               mat-raised-button
               color="primary"
+              type="submit"
               [disabled]="form.invalid"
-              (click)="onSubmit()"
               class="btn-primary"
+              (click)="resetForm(); expansionPanel.close()"
             >
-              <mat-icon class="me-1">save</mat-icon> Salva studente
+              <mat-icon class="me-1">save</mat-icon>
+              {{ isEditMode ? "Aggiorna Utente" : "Salva Utente" }}
             </button>
             <button
+              *ngIf="isEditMode"
               mat-raised-button
-              color="accent"
-              [disabled]="form.invalid"
-              (click)="generatePdf()"
-              class="btn-accent"
+              color="warn"
+              (click)="resetForm(); expansionPanel.close()"
+              class="btn-warn"
             >
-              <mat-icon class="me-1">print</mat-icon> Stampa Certificato
+              <mat-icon class="me-1">cancel</mat-icon> Annulla
             </button>
           </div>
         </form>
@@ -160,7 +165,7 @@
   </mat-expansion-panel>
 
   <div class="d-flex justify-content-center mt-5">
-    <h4 class="section-title">Cerca Studenti</h4>
+    <h4 class="section-title">Cerca utente</h4>
   </div>
 
   <div class="d-flex justify-content-center mt-4">
@@ -178,7 +183,7 @@
   <mat-card class="mt-5 p-4 students-card">
     <h3 class="mb-4 card-title">
       <mat-icon class="me-2">school</mat-icon>
-      Studenti salvati
+      Utenti salvati
     </h3>
     <div class="table-responsive">
       <table
@@ -210,9 +215,21 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
           <td mat-cell *matCellDef="let element" class="text-center">
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center gap-2">
               <button
-                matTooltip="Elimina Studente"
+                matTooltip="Modifica Utente"
+                mat-icon-button
+                class="btn-edit"
+                (click)="
+                  editUser(element);
+                  expansionPanel.open();
+                  $event.stopPropagation()
+                "
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                matTooltip="Elimina Utente"
                 mat-icon-button
                 class="btn-delete"
                 (click)="deleteData(element); $event.stopPropagation()"
@@ -220,7 +237,7 @@
                 <mat-icon>delete</mat-icon>
               </button>
               <button
-                matTooltip="Visualizza Studente"
+                matTooltip="Visualizza Utente"
                 mat-icon-button
                 class="btn-view"
                 (click)="openDetailModal(element); $event.stopPropagation()"
@@ -228,16 +245,14 @@
                 <mat-icon>visibility</mat-icon>
               </button>
               <button
-                matTooltip="Inserisci Studente"
+                matTooltip="Stampa Certificato"
                 mat-icon-button
-                class="btn-add"
+                class="btn-view"
                 (click)="
-                  populateForm(element);
-                  expansionPanel.open();
-                  $event.stopPropagation()
+                  populateForm(element); generatePdf(); $event.stopPropagation()
                 "
               >
-                <mat-icon>add_diamond</mat-icon>
+                <mat-icon>print</mat-icon>
               </button>
             </div>
           </td>
@@ -273,7 +288,7 @@
       [pageSizeOptions]="[5, 10, 20, 50]"
       [length]="dataSource.data.length"
       showFirstLastButtons
-      aria-label="Seleziona pagina di studenti"
+      aria-label="Seleziona pagina di utenti"
     ></mat-paginator>
     <div class="d-flex justify-content-end mt-4">
       <button
@@ -299,7 +314,7 @@
     <div class="modal-content shadow-lg rounded-3">
       <div class="modal-header text-black">
         <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
-          <i class="bi bi-info-circle me-2"></i> Dettagli Studente
+          <i class="bi bi-info-circle me-2"></i> Dettagli Utente
         </h5>
       </div>
       <div class="modal-body">

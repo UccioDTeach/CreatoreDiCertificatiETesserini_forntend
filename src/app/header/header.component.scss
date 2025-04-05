@@ -20,7 +20,7 @@ $dark-bg: #363636;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 10vh;
   width: 100%;
-  position: fixed; /* Fissa l'header in alto */
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -30,7 +30,7 @@ $dark-bg: #363636;
     justify-content: space-between;
     align-items: center;
     width: 90%;
-    max-width: 1200px; /* Limita la larghezza massima */
+    max-width: 1200px;
   }
 
   .header-title {

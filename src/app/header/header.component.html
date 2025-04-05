@@ -1,9 +1,11 @@
 <header class="header">
   <div class="header-container">
-    <h1 (click)="navigateTo('/')" class="header-title">Certificati Rapidi</h1>
+    <h1>Certificati Rapidi</h1>
     <nav class="header-nav">
-      @if (router.url !== '/home') {
-      <a (click)="navigateTo('/')" class="nav-link">Home</a>
+      @if(router.url !== '/form' && user()) {
+      <a (click)="navigateTo('/form')" class="nav-link"
+        >Generatore di certificati</a
+      >
       } @if (router.url !== '/chi-siamo') {
       <a (click)="navigateTo('/chi-siamo')" class="nav-link">Chi Siamo</a>
       } @if(!user()) {

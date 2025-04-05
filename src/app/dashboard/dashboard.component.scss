@@ -1,0 +1,140 @@
+$primary-color: #1a3a5f;
+$secondary-color: #2e6ca4;
+$background-light: #f5f8fb;
+$border-light: #e0e5eb;
+$background-white: #ffffff;
+$hover-color: #edf2f7;
+$error-color: #d32f2f;
+$title-font: "Georgia", serif;
+$body-font: "Calibri", sans-serif;
+$dark-bg: #363636;
+
+.page-wrapper {
+  overflow-x: hidden;
+}
+
+.main-content {
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-container {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.logo {
+  width: clamp(10rem, 20vw, 20rem);
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba($secondary-color, 0.4);
+    transform: translateY(-5px);
+  }
+
+  &:active {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+  }
+}
+
+.btn-primary {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-family: $body-font;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+.btn-accent {
+  background-color: $secondary-color;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-family: $body-font;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    background-color: darken($secondary-color, 10%);
+  }
+}
+
+.btn-view {
+  color: $primary-color;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: rgba(26, 58, 95, 0.1);
+    text-decoration: none;
+  }
+}
+
+.footer {
+  background-color: $primary-color;
+  color: white;
+  padding: 20px 0;
+  border-top: 1px solid lighten($primary-color, 10%);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  min-height: 10vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  a.btn-view {
+    color: white;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title h1 {
+    font-size: 2rem;
+  }
+
+  .footer {
+    text-align: center;
+
+    .text-md-start,
+    .text-md-end {
+      text-align: center !important;
+      margin-bottom: 10px;
+    }
+  }
+}
