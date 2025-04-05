@@ -170,9 +170,8 @@ export class FormComponent {
     if (this.form.valid) {
       const userData = this.form.value;
       userData.createdBy = this.user();
-
+console.log(userData);
       if (this.isEditMode) {
-        // Update existing user
         this.userService.updateUser(userData.id, userData).subscribe({
           next: () => {
             this.loadUsers();

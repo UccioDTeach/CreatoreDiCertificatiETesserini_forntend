@@ -6,7 +6,7 @@ import Certificato from '../../config/certificato.model';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class CertService {
   private apiUrl = 'http://localhost:3000/api/certificati';
 
   constructor(private http: HttpClient) {}
