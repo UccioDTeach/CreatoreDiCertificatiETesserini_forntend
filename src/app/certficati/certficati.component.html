@@ -1,0 +1,262 @@
+<body>
+  <div class="container-fluid px-3">
+    <mat-expansion-panel #expansionPanel class="overflow-visible custom-panel">
+      <mat-expansion-panel-header class="form-container p-4 mt-4">
+        <div class="d-flex align-items-center">
+          <mat-icon class="me-2">person_add</mat-icon>
+          <span class="panel-title">{{
+            isEditMode ? "Modifica Certificato" : "Aggiungi Certificato"
+          }}</span>
+        </div>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="position-relative overflow-visible">
+          <form
+            [formGroup]="form"
+            class="position-absolute top-0 start-0 picone bg-light z-3 p-4 form-container"
+            [ngStyle]="{
+              'width.px': expansionPanel._body?.nativeElement?.clientWidth
+            }"
+            (ngSubmit)="onSubmit()"
+          >
+            <div class="row g-3">
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Tipo certificato</mat-label>
+                  <input matInput formControlName="TipoCertificato" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Titolo</mat-label>
+                  <input matInput formControlName="titolo" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Motivo attestazione</mat-label>
+                  <input matInput formControlName="titolo" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Si attesta che</mat-label>
+                  <input matInput formControlName="siAttestaChe" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Sottotiolo</mat-label>
+                  <input matInput formControlName="sottotitolo" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Luogo formazione</mat-label>
+                  <input matInput formControlName="luogoFormazione" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Sottotiolo2</mat-label>
+                  <input matInput formControlName="sottotitolo2" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>carica1</mat-label>
+                  <input matInput formControlName="carica1" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>carica2</mat-label>
+                  <input matInput formControlName="carica2" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>carica3</mat-label>
+                  <input matInput formControlName="carica3" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4 gap-3 flex-wrap">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="form.invalid"
+                class="btn-primary"
+               
+              >
+                <mat-icon class="me-1">save</mat-icon>
+                {{ isEditMode ? "Aggiorna Certificato" : "Salva Certificato" }}
+              </button>
+              <button
+                *ngIf="isEditMode"
+                mat-raised-button
+                color="warn"
+                (click)="resetForm(); expansionPanel.close()"
+                class="btn-warn"
+              >
+                <mat-icon class="me-1">cancel</mat-icon> Annulla
+              </button>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  
+    <div class="d-flex justify-content-center mt-5">
+      <h4 class="section-title">Cerca Certificato</h4>
+    </div>
+  
+    <div class="d-flex justify-content-center mt-4">
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>Filtra</mat-label>
+        <input
+          matInput
+          (keyup)="search($event)"
+          placeholder="Cerca per nome, cognome o certificato..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  
+    <mat-card class="mt-5 p-4 students-card">
+      <h3 class="mb-4 card-title">
+        <mat-icon class="me-2">school</mat-icon>
+        Certificati salvati
+      </h3>
+      <div class="table-responsive">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z2"
+          matSort
+        >
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="tipoCertificato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo certificato</th>
+            <td mat-cell *matCellDef="let element">{{ element.TipoCertificato }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
+            <td mat-cell *matCellDef="let element" class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <button
+                  matTooltip="Modifica Certificato"
+                  mat-icon-button
+                  class="btn-edit"
+                  (click)="
+                    editUser(element);
+                    expansionPanel.open();
+                    $event.stopPropagation()
+                  "
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  matTooltip="Elimina Certificato"
+                  mat-icon-button
+                  class="btn-delete"
+                  (click)="deleteData(element); $event.stopPropagation()"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button
+                  matTooltip="Visualizza Certificato"
+                  mat-icon-button
+                  class="btn-view"
+                  (click)="openDetailModal(element); $event.stopPropagation()"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="[
+              'id',
+              'tipoCertificato',
+              'actions'
+            ]"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns: [
+                'id',
+                'tipoCertificato',
+                'actions'
+              ]
+            "
+            class="table-row-hover"
+          ></tr>
+        </table>
+      </div>
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20, 50]"
+        [length]="dataSource.data.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina di certificati"
+      ></mat-paginator>
+      <div class="d-flex justify-content-end mt-4">
+
+      </div>
+    </mat-card>
+  </div>
+  
+  <div
+    class="modal fade"
+    id="detailModal"
+    tabindex="-1"
+    aria-labelledby="detailModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-header text-black">
+          <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
+            <i class="bi bi-info-circle me-2"></i> Dettagli Certificato
+          </h5>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+              <p class="detail-item">
+                <i class="bi bi-award"></i>
+                <strong>Tipo Certificato: </strong>
+                <span id="modal-tipoCertificato"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Chiudi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</body>

@@ -4,6 +4,8 @@ import { HomeComponent } from './home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { AuthComponent } from './auth/auth.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { CertficatiComponent } from './certficati/certficati.component';
+
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -15,4 +17,6 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
   },
+{path: 'certificati', component: CertficatiComponent, canActivate: [authGuard]},
 ];
+  

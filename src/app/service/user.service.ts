@@ -8,7 +8,7 @@ import Utente from '../../config/utente.model';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = 'http://localhos t:3000/api/users';
 
   constructor(private http: HttpClient) {}
 
