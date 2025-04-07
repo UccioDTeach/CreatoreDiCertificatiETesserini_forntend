@@ -60,6 +60,7 @@ export const IT_DATE_FORMATS = {
 
 @Component({
   selector: 'app-form',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

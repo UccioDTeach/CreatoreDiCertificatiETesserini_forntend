@@ -56,6 +56,7 @@ export const IT_DATE_FORMATS = {
 
 @Component({
   selector: 'app-certficati',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -112,8 +113,9 @@ export class CertficatiComponent {
 
     this.form = this.fb.group({
       id: [undefined],
+      dataEmissione: [new Date(), Validators.required],
       createdBy: [this.user],
-      TipoCertificato: ['', Validators.required],
+      tipoCertificato: ['', Validators.required],
       titolo: ['', Validators.required],
       siAttestaChe: ['', Validators.required],
       sottotitolo: ['', Validators.required],
@@ -218,7 +220,8 @@ export class CertficatiComponent {
       this.form.patchValue({
         id: element.id,
         createdBy: element.createdBy,
-        TipoCertificato: element.TipoCertificato,
+        dataEmissione: element.dataEmissione,
+        tipoCertificato: element.tipoCertificato,
         titolo: element.titolo,
         siAttestaChe: element.siAttestaChe,
         sottotitolo: element.sottotitolo,
@@ -283,7 +286,7 @@ export class CertficatiComponent {
 
     openDetailModal(element: Certificato) {
 
-      document.getElementById('modal-tipoCertificato')!.textContent = element.TipoCertificato;
+      document.getElementById('modal-tipoCertificato')!.textContent = element.tipoCertificato;
       document.getElementById('modal-carica1')!.textContent = element.carica1;
       document.getElementById('modal-carica2')!.textContent = element.carica2;
       document.getElementById('modal-carica3')!.textContent =

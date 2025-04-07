@@ -5,7 +5,9 @@ type Certificato = {
 
   createdBy: UtenteRegistrato | null;
 
-  TipoCertificato: string;
+  tipoCertificato: string;
+
+  dataEmissione: Date;
 
   titolo: string;
 
