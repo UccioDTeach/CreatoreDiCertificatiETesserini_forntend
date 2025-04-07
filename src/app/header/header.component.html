@@ -4,11 +4,18 @@
     <nav class="header-nav">
       @if(router.url !== '/form' && user()) {
       <a (click)="navigateTo('/form')" class="nav-link"
-        >Generatore di certificati</a
+        >Utenti </a
       >
-      } @if (router.url !== '/chi-siamo') {
+      }
+      @if(router.url !== '/certificati' && user()) {
+      <a (click)="navigateTo('/certificati')" class="nav-link"
+        >Certificati</a
+      >
+      }
+      @if (router.url !== '/chi-siamo') {
       <a (click)="navigateTo('/chi-siamo')" class="nav-link">Chi Siamo</a>
-      } @if(!user()) {
+      } 
+      @if(!user()) {
       <button class="btn btn-primary" (click)="navigateTo('/auth')">
         Login
       </button>

@@ -14,14 +14,14 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   MatNativeDateModule,
-  MatOption,
+  MatOptionModule,
 } from '@angular/material/core';
 import {
   MatDatepickerModule
 } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -31,7 +31,7 @@ import {
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Swal from 'sweetalert2';
@@ -69,13 +69,13 @@ export const IT_DATE_FORMATS = {
     MatSortModule,
     MatPaginatorModule,
     MatButtonModule,
-    MatIcon,
+    MatIconModule,
     HttpClientModule,
-    MatOption,
+    MatOptionModule,
     MatSelectModule,
     MatExpansionModule,
-    MatTooltip,
-  ],
+    MatTooltipModule
+],
   templateUrl: './certficati.component.html',
   styleUrl: './certficati.component.scss',
     providers: [
@@ -201,13 +201,11 @@ export class CertficatiComponent {
             },  
           });
         }
+        this.closeFormModal();
       }
     }
   
-    editUser(cert: Certificato): void {
-      this.isEditMode = true;
-      this.populateForm(cert);
-    }
+
   
     // Added resetForm method
     resetForm(): void {
@@ -285,20 +283,21 @@ export class CertficatiComponent {
     }
 
     openDetailModal(element: Certificato) {
-
       document.getElementById('modal-tipoCertificato')!.textContent = element.tipoCertificato;
       document.getElementById('modal-carica1')!.textContent = element.carica1;
       document.getElementById('modal-carica2')!.textContent = element.carica2;
-      document.getElementById('modal-carica3')!.textContent =
-        element.carica3;
-      document.getElementById('modal-luogoFormazione')!.textContent =
-        element.luogoFormazione;
-      document.getElementById('modal-siAttestaChe')!.textContent =
-        element.siAttestaChe;
+      document.getElementById('modal-carica3')!.textContent = element.carica3;
+      document.getElementById('modal-luogoFormazione')!.textContent = element.luogoFormazione;
+      document.getElementById('modal-siAttestaChe')!.textContent = element.siAttestaChe;
       document.getElementById('modal-sottotitolo')!.textContent = element.sottotitolo;
       document.getElementById('modal-sottotitolo2')!.textContent = element.sottotitolo2;
-      document.getElementById('modal-titolo')!.textContent =
-        element.titolo;
+      document.getElementById('modal-titolo')!.textContent = element.titolo;
+      
+      // Format the date properly
+      const datePipe = new DatePipe('it-IT');
+      const formattedDate = datePipe.transform(element.dataEmissione, 'dd/MM/yyyy');
+      document.getElementById('modal-dataEmissione')!.textContent = formattedDate || '';
+      
       const modal = new bootstrap.Modal(document.getElementById('detailModal')!);
       modal.show();
     }
@@ -310,5 +309,31 @@ export class CertficatiComponent {
         .toLowerCase();
       this.dataSource.filter = filterValue;
       this.table.renderRows();
+    }
+
+    openFormModal() {
+      this.isEditMode = false;
+      this.resetForm();
+      const modal = document.getElementById('formModal');
+      if (modal) {
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+      }
+    }
+
+    closeFormModal() {
+      const modal = document.getElementById('formModal');
+      if (modal) {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) {
+          bsModal.hide();
+        }
+      }
+    }
+
+    editUser(element: any) {
+      this.isEditMode = true;
+      this.form.patchValue(element);
+      this.openFormModal();
     }
 }

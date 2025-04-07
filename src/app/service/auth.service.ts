@@ -16,14 +16,21 @@ export class AuthService {
       if (this.user() === null) {
         this.me().subscribe({
           next: (user) => {
-            resolve(user);
+            if (user) {
+              this.user.set(user);
+              resolve(user);
+            } else {
+              resolve(null);
+            }
           },
           error: (error) => {
-            resolve(null); // Risolvi con null in caso di errore
+            console.error('Auth promise error:', error);
+            this.user.set(null);
+            resolve(null);
           },
         });
       } else {
-        resolve(this.user()); // Risolvi con l'utente corrente se già presente
+        resolve(this.user());
       }
     });
   }
@@ -79,12 +86,22 @@ export class AuthService {
 
   me() {
     return this.http
-      .get<UtenteRegistrato>(`${this.url}/me`, { withCredentials: true })
+      .get<UtenteRegistrato>(`${this.url}/me`, { 
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       .pipe(
         tap((response: UtenteRegistrato) => {
-          this.user.set(response);
+          if (response) {
+            this.user.set(response);
+          } else {
+            this.user.set(null);
+          }
         }),
         catchError((error) => {
+          console.error('Auth error:', error);
           this.user.set(null);
           return throwError(() => error);
         })

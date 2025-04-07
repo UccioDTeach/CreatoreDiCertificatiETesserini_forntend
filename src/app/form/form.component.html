@@ -1,378 +1,393 @@
-<div class="container-fluid px-3">
-  <mat-expansion-panel #expansionPanel class="overflow-visible custom-panel">
-    <mat-expansion-panel-header class="form-container p-4 mt-4">
-      <div class="d-flex align-items-center">
-        <mat-icon class="me-2">person_add</mat-icon>
-        <span class="panel-title">{{
-          isEditMode ? "Modifica Utente" : "Aggiungi Utente"
-        }}</span>
-      </div>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="position-relative overflow-visible">
-        <form
-          [formGroup]="form"
-          class="position-absolute top-0 start-0 picone bg-light z-3 p-4 form-container"
-          [ngStyle]="{
-            'width.px': expansionPanel._body?.nativeElement?.clientWidth
-          }"
-          (ngSubmit)="onSubmit()"
+<body>
+  <div class="container-fluid px-3">
+    <!-- Add button to open modal -->
+    <div class="d-flex justify-content-end mt-4">
+      <button mat-raised-button color="primary" (click)="openFormModal()" class="btn-primary">
+        <mat-icon class="me-1">add</mat-icon>
+        Aggiungi Utente
+      </button>
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      <h4 class="section-title">Cerca Utente</h4>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>Filtra</mat-label>
+        <input
+          matInput
+          (keyup)="search($event)"
+          placeholder="Cerca per nome, cognome o email..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <mat-card class="mt-5 p-4 students-card">
+      <h3 class="mb-4 card-title">
+        <mat-icon class="me-2">school</mat-icon>
+        Utenti salvati
+      </h3>
+      <div class="table-responsive">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z2"
+          matSort
         >
-          <div class="row g-3">
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Nome</mat-label>
-                <input matInput formControlName="name" required />
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Cognome</mat-label>
-                <input matInput formControlName="cognome" required />
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Data di nascita</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker"
-                  formControlName="dataNascita"
-                  required
-                  (keypress)="formatDate($event)"
-                  [maxLength]="10"
-                  [minlength]="10"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                <mat-error>Inserisci una data valida</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Codice fiscale</mat-label>
-                <input matInput formControlName="codiceFiscale" required />
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" formControlName="email" required />
-                <mat-error>Inserisci un'email valida</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Data di rilascio</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="rilascio"
-                  formControlName="dataRilascio"
-                  (dateChange)="onDataRilascioChange($event)"
-                  required
-                  (keypress)="formatDate($event)"
-                  [maxLength]="10"
-                  [minlength]="10"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="rilascio"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #rilascio></mat-datepicker>
-                <mat-error>Inserisci una data valida</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Validità</mat-label>
-                <input
-                  matInput
-                  readonly
-                  [matDatepicker]="validita"
-                  formControlName="validita"
-                  required
-                />
-                <mat-datepicker-toggle
-                  disabled
-                  matSuffix
-                  [for]="validita"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #validita></mat-datepicker>
-                <mat-error>Inserisci una data valida</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Direttore del Corso</mat-label>
-                <mat-select formControlName="direttore" required>
-                  <mat-option value="Picone">Picone</mat-option>
-                  <mat-option value="Rocca">Rocca</mat-option>
-                  <mat-option value="Faini">Faini</mat-option>
-                </mat-select>
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Istruttore</mat-label>
-                <mat-select formControlName="istruttore" required>
-                  <mat-option value="Picone">Picone</mat-option>
-                  <mat-option value="Rocca">Rocca</mat-option>
-                  <mat-option value="Faini">Faini</mat-option>
-                </mat-select>
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6 col-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Codice Certificato</mat-label>
-                <input matInput formControlName="codiceCertificato" required />
-                <mat-error>Campo obbligatorio!</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="d-flex justify-content-end mt-4 gap-3 flex-wrap">
-            <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="form.invalid"
-              class="btn-primary"
-             
-            >
-              <mat-icon class="me-1">save</mat-icon>
-              {{ isEditMode ? "Aggiorna Utente" : "Salva Utente" }}
-            </button>
-            <button
-              *ngIf="isEditMode"
-              mat-raised-button
-              color="warn"
-              (click)="resetForm(); expansionPanel.close()"
-              class="btn-warn"
-            >
-              <mat-icon class="me-1">cancel</mat-icon> Annulla
-            </button>
-          </div>
-        </form>
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
-
-  <div class="d-flex justify-content-center mt-5">
-    <h4 class="section-title">Cerca utente</h4>
-  </div>
-
-  <div class="d-flex justify-content-center mt-4">
-    <mat-form-field class="search-field" appearance="outline">
-      <mat-label>Filtra</mat-label>
-      <input
-        matInput
-        (keyup)="search($event)"
-        placeholder="Cerca per nome, cognome o certificato..."
-      />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </div>
-
-  <mat-card class="mt-5 p-4 students-card">
-    <h3 class="mb-4 card-title">
-      <mat-icon class="me-2">school</mat-icon>
-      Utenti salvati
-    </h3>
-    <div class="table-responsive">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        class="mat-elevation-z2"
-        matSort
-      >
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-        </ng-container>
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-        <ng-container matColumnDef="cognome">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cognome</th>
-          <td mat-cell *matCellDef="let element">{{ element.cognome }}</td>
-        </ng-container>
-        <ng-container matColumnDef="NumeroCertificazione">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Numero Certificazione
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.codiceCertificato }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
-          <td mat-cell *matCellDef="let element" class="text-center">
-            <div class="d-flex justify-content-center gap-2">
-              <button
-                matTooltip="Modifica Utente"
-                mat-icon-button
-                class="btn-edit"
-                (click)="
-                  editUser(element);
-                  expansionPanel.open();
-                  $event.stopPropagation()
-                "
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button
-                matTooltip="Elimina Utente"
-                mat-icon-button
-                class="btn-delete"
-                (click)="deleteData(element); $event.stopPropagation()"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-              <button
-                matTooltip="Visualizza Utente"
-                mat-icon-button
-                class="btn-view"
-                (click)="openDetailModal(element); $event.stopPropagation()"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button
-                matTooltip="Stampa Certificato"
-                mat-icon-button
-                class="btn-view"
-                (click)="
-                  populateForm(element); generatePdf(); $event.stopPropagation()
-                "
-              >
-                <mat-icon>print</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
-        <tr
-          mat-header-row
-          *matHeaderRowDef="[
-            'id',
-            'name',
-            'cognome',
-            'NumeroCertificazione',
-            'actions'
-          ]"
-        ></tr>
-        <tr
-          mat-row
-          *matRowDef="
-            let row;
-            columns: [
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="cognome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cognome</th>
+            <td mat-cell *matCellDef="let element">{{ element.cognome }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+          </ng-container>
+          <ng-container matColumnDef="dataNascita">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data di Nascita</th>
+            <td mat-cell *matCellDef="let element">{{ element.dataNascita | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="codiceFiscale">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Codice Fiscale</th>
+            <td mat-cell *matCellDef="let element">{{ element.codiceFiscale }}</td>
+          </ng-container>
+          <ng-container matColumnDef="dataRilascio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data di Rilascio</th>
+            <td mat-cell *matCellDef="let element">{{ element.dataRilascio | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="validita">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Validità</th>
+            <td mat-cell *matCellDef="let element">{{ element.validita | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="direttore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Direttore</th>
+            <td mat-cell *matCellDef="let element">{{ element.direttore }}</td>
+          </ng-container>
+          <ng-container matColumnDef="istruttore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Istruttore</th>
+            <td mat-cell *matCellDef="let element">{{ element.istruttore }}</td>
+          </ng-container>
+          <ng-container matColumnDef="codiceCertificato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Codice Certificato</th>
+            <td mat-cell *matCellDef="let element">{{ element.codiceCertificato }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
+            <td mat-cell *matCellDef="let element" class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <button
+                  matTooltip="Modifica Utente"
+                  mat-icon-button
+                  class="btn-edit"
+                  (click)="editUser(element); $event.stopPropagation()"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  matTooltip="Elimina Utente"
+                  mat-icon-button
+                  class="btn-delete"
+                  (click)="deleteData(element); $event.stopPropagation()"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button
+                  matTooltip="Visualizza Utente"
+                  mat-icon-button
+                  class="btn-view"
+                  (click)="openDetailModal(element); $event.stopPropagation()"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="[
               'id',
               'name',
               'cognome',
-              'NumeroCertificazione',
+              'email',
+              'dataNascita',
+              'codiceFiscale',
+              'dataRilascio',
+              'validita',
+              'direttore',
+              'istruttore',
+              'codiceCertificato',
               'actions'
-            ]
-          "
-          class="table-row-hover"
-        ></tr>
-      </table>
-    </div>
-    <mat-paginator
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20, 50]"
-      [length]="dataSource.data.length"
-      showFirstLastButtons
-      aria-label="Seleziona pagina di utenti"
-    ></mat-paginator>
-    <div class="d-flex justify-content-end mt-4">
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="saveToFile()"
-        class="btn-primary"
-      >
-        <mat-icon>download</mat-icon> Salva Csv
-      </button>
-    </div>
-  </mat-card>
-</div>
+            ]"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns: [
+                'id',
+                'name',
+                'cognome',
+                'email',
+                'dataNascita',
+                'codiceFiscale',
+                'dataRilascio',
+                'validita',
+                'direttore',
+                'istruttore',
+                'codiceCertificato',
+                'actions'
+              ]
+            "
+            class="table-row-hover"
+          ></tr>
+        </table>
+      </div>
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20, 50]"
+        [length]="dataSource.data.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina di utenti"
+      ></mat-paginator>
+    </mat-card>
+  </div>
 
-<div
-  class="modal fade"
-  id="detailModal"
-  tabindex="-1"
-  aria-labelledby="detailModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content shadow-lg rounded-3">
-      <div class="modal-header text-black">
-        <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
-          <i class="bi bi-info-circle me-2"></i> Dettagli Utente
-        </h5>
-      </div>
-      <div class="modal-body">
-        <div class="row g-3">
-          <div class="col-lg-6 col-md-6 col-12">
-            <p class="detail-item">
-              <i class="bi bi-person-fill"></i>
-              <strong>Nome: </strong> <span id="modal-name"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-person-fill"></i>
-              <strong>Cognome: </strong> <span id="modal-cognome"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-calendar"></i>
-              <strong>Data di Nascita: </strong>
-              <span id="modal-birthdate"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-credit-card"></i>
-              <strong>Codice Fiscale: </strong> <span id="modal-cf"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-envelope"></i>
-              <strong>Email: </strong> <span id="modal-email"></span>
-            </p>
-          </div>
-          <div class="col-lg-6 col-md-6 col-12">
-            <p class="detail-item">
-              <i class="bi bi-calendar-check"></i>
-              <strong>Data Rilascio: </strong> <span id="modal-rilascio"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-hourglass-split"></i>
-              <strong>Validità: </strong> <span id="modal-validita"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-person-badge"></i>
-              <strong>Direttore del Corso: </strong>
-              <span id="modal-direttore"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-person-check"></i>
-              <strong>Istruttore: </strong> <span id="modal-istruttore"></span>
-            </p>
-            <p class="detail-item">
-              <i class="bi bi-award"></i>
-              <strong>Codice Certificato: </strong>
-              <span id="modal-codiceCertificato"></span>
-            </p>
-          </div>
+  <!-- Form Modal -->
+  <div
+    class="modal fade"
+    id="formModal"
+    tabindex="-1"
+    aria-labelledby="formModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-header text-black">
+          <h5 class="modal-title d-flex align-items-center" id="formModalLabel">
+            <i class="bi bi-info-circle me-2"></i>
+            {{ isEditMode ? "Modifica Utente" : "Aggiungi Utente" }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Chiudi
-        </button>
+        <div class="modal-body">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row g-3">
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Nome</mat-label>
+                  <input matInput formControlName="name" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Cognome</mat-label>
+                  <input matInput formControlName="cognome" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="email" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data di nascita</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="dataNascita" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data di rilascio</mat-label>
+                  <input matInput [matDatepicker]="pickerRilascio" formControlName="dataRilascio" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerRilascio"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerRilascio></mat-datepicker>
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Validità</mat-label>
+                  <input matInput [matDatepicker]="pickerValidita" formControlName="validita" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerValidita"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerValidita></mat-datepicker>
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Codice fiscale</mat-label>
+                  <input matInput formControlName="codiceFiscale" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Direttore del Corso</mat-label>
+                  <mat-select formControlName="direttore" required>
+                    <mat-option value="Picone">Picone</mat-option>
+                    <mat-option value="Rocca">Rocca</mat-option>
+                    <mat-option value="Faini">Faini</mat-option>
+                  </mat-select>
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Istruttore</mat-label>
+                  <mat-select formControlName="istruttore" required>
+                    <mat-option value="Picone">Picone</mat-option>
+                    <mat-option value="Rocca">Rocca</mat-option>
+                    <mat-option value="Faini">Faini</mat-option>
+                  </mat-select>
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Codice Certificato</mat-label>
+                  <input matInput formControlName="codiceCertificato" required />
+                  <mat-error>Campo obbligatorio!</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4 gap-3 flex-wrap">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="form.invalid"
+                class="btn-primary"
+              >
+                <mat-icon class="me-1">save</mat-icon>
+                {{ isEditMode ? "Aggiorna Utente" : "Salva Utente" }}
+              </button>
+              <button
+                *ngIf="isEditMode"
+                mat-raised-button
+                color="warn"
+                (click)="resetForm(); closeFormModal()"
+                class="btn-warn"
+              >
+                <mat-icon class="me-1">cancel</mat-icon> Annulla
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Detail Modal -->
+  <div
+    class="modal fade"
+    id="detailModal"
+    tabindex="-1"
+    aria-labelledby="detailModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-header text-black">
+          <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
+            <i class="bi bi-info-circle me-2"></i> Dettagli Utente
+          </h5>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-person"></i>
+                <strong>Nome: </strong>
+                <span id="modal-name"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-person"></i>
+                <strong>Cognome: </strong>
+                <span id="modal-cognome"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-envelope"></i>
+                <strong>Email: </strong>
+                <span id="modal-email"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-calendar-date"></i>
+                <strong>Data di nascita: </strong>
+                <span id="modal-birthdate"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-calendar-check"></i>
+                <strong>Data di rilascio: </strong>
+                <span id="modal-rilascio"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-calendar-check"></i>
+                <strong>Validità: </strong>
+                <span id="modal-validita"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-person-vcard"></i>
+                <strong>Codice Fiscale: </strong>
+                <span id="modal-cf"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-person-badge"></i>
+                <strong>Direttore: </strong>
+                <span id="modal-direttore"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-person-badge"></i>
+                <strong>Istruttore: </strong>
+                <span id="modal-istruttore"></span>
+              </p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="detail-item">
+                <i class="bi bi-upc"></i>
+                <strong>Codice Certificato: </strong>
+                <span id="modal-codiceCertificato"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Chiudi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [RouterLink, MatSidenavModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

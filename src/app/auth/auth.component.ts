@@ -16,6 +16,7 @@ import UtenteRegistrato from '../../config/utenteRegistrato.model';
 import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-auth',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

@@ -475,3 +475,16 @@ mat-form-field {
     margin: 10px;
   }
 }
+
+// Fix per il posizionamento delle select nelle modali
+::ng-deep .mat-mdc-select-panel {
+  z-index: 9999 !important;
+}
+
+::ng-deep .mat-mdc-select-panel-above {
+  z-index: 9999 !important;
+}
+
+::ng-deep .mat-mdc-select-panel-backdrop {
+  z-index: 9998 !important;
+}

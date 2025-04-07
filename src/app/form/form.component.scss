@@ -475,3 +475,31 @@ mat-form-field {
     margin: 10px;
   }
 }
+
+// Fix per il posizionamento delle select nelle modali
+::ng-deep .mat-mdc-select-panel {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+::ng-deep .mat-mdc-select-panel-above {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+::ng-deep .mat-mdc-select-panel-backdrop {
+  z-index: 99998 !important;
+  position: fixed !important;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+::ng-deep .cdk-overlay-pane {
+  z-index: 99999 !important;
+}
+
+::ng-deep .mat-mdc-select-panel-wrap {
+  z-index: 99999 !important;
+}

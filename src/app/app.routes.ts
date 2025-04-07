@@ -6,17 +6,25 @@ import { AuthComponent } from './auth/auth.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CertficatiComponent } from './certficati/certficati.component';
 
-
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'form', component: FormComponent, canActivate: [authGuard] },
   { path: 'auth', component: AuthComponent },
+  { 
+    path: 'form', 
+    component: FormComponent, 
+    canActivate: [authGuard] 
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [authGuard],
   },
-{path: 'certificati', component: CertficatiComponent, canActivate: [authGuard]},
+  {
+    path: 'certificati', 
+    component: CertficatiComponent, 
+    canActivate: [authGuard]
+  },
+  { path: '**', redirectTo: 'home' }
 ];
   
