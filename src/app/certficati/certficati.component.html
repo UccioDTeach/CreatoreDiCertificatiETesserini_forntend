@@ -42,37 +42,56 @@
           </ng-container>
           <ng-container matColumnDef="tipoCertificato">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo certificato</th>
-            <td mat-cell *matCellDef="let element">{{ element.TipoCertificato }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.tipoCertificato }}</td>
+          </ng-container>
+          <ng-container matColumnDef="titolo">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
+             <td mat-cell *matCellDef="let element"> {{element.titolo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="siAttestaChe">
+            <th mat-header-cell *matHeaderCellDef> Si Attesta Che </th>
+            <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.siAttestaChe}} </td>
+          </ng-container>
+          <ng-container matColumnDef="sottotitolo">
+             <th mat-header-cell *matHeaderCellDef> Sottotitolo </th>
+             <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.sottotitolo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="luogoFormazione">
+            <th mat-header-cell *matHeaderCellDef> Luogo Formazione </th>
+            <td mat-cell *matCellDef="let element"> {{element.luogoFormazione}} </td>
+          </ng-container>
+          <ng-container matColumnDef="sottotitolo2">
+            <th mat-header-cell *matHeaderCellDef> Sottotitolo 2 </th>
+            <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.sottotitolo2}} </td>
+          </ng-container>
+          <ng-container matColumnDef="carica1">
+             <th mat-header-cell *matHeaderCellDef> Carica 1 </th>
+             <td mat-cell *matCellDef="let element"> {{element.carica1}} </td>
+          </ng-container>
+          <ng-container matColumnDef="carica2">
+             <th mat-header-cell *matHeaderCellDef> Carica 2 </th>
+             <td mat-cell *matCellDef="let element"> {{element.carica2}} </td>
+          </ng-container>
+          <ng-container matColumnDef="carica3">
+             <th mat-header-cell *matHeaderCellDef> Carica 3 </th>
+             <td mat-cell *matCellDef="let element"> {{element.carica3}} </td>
+          </ng-container>
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef> Creato Da </th>
+            <td mat-cell *matCellDef="let element"> {{element.createdBy?.email || 'N/A'}} </td>
           </ng-container>
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
-            <td mat-cell *matCellDef="let element" class="text-center">
-              <div class="d-flex justify-content-center gap-2">
-                <button
-                  matTooltip="Modifica Certificato"
-                  mat-icon-button
-                  class="btn-edit"
-                  (click)="editUser(element); $event.stopPropagation()"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button
-                  matTooltip="Elimina Certificato"
-                  mat-icon-button
-                  class="btn-delete"
-                  (click)="deleteData(element); $event.stopPropagation()"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-                <button
-                  matTooltip="Visualizza Certificato"
-                  mat-icon-button
-                  class="btn-view"
-                  (click)="openDetailModal(element); $event.stopPropagation()"
-                >
-                  <mat-icon>visibility</mat-icon>
-                </button>
-              </div>
+            <th mat-header-cell *matHeaderCellDef> Azioni </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button (click)="openEditModal(element)" color="primary" matTooltip="Modifica">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="deleteData(element)" color="warn" matTooltip="Elimina">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openDetailModal(element)" color="accent" matTooltip="Visualizza">
+                <mat-icon>visibility</mat-icon>
+              </button>
             </td>
           </ng-container>
           <tr
@@ -80,6 +99,15 @@
             *matHeaderRowDef="[
               'id',
               'tipoCertificato',
+              'titolo',
+              'siAttestaChe',
+              'sottotitolo',
+              'luogoFormazione',
+              'sottotitolo2',
+              'carica1',
+              'carica2',
+              'carica3',
+              'createdBy',
               'actions'
             ]"
           ></tr>
@@ -90,6 +118,15 @@
               columns: [
                 'id',
                 'tipoCertificato',
+                'titolo',
+                'siAttestaChe',
+                'sottotitolo',
+                'luogoFormazione',
+                'sottotitolo2',
+                'carica1',
+                'carica2',
+                'carica3',
+                'createdBy',
                 'actions'
               ]
             "
@@ -139,24 +176,8 @@
               </div>
               <div class="col-md-6 col-12">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Data Emissione</mat-label>
-                  <input matInput [matDatepicker]="pickerEmissione" formControlName="dataEmissione" required>
-                  <mat-datepicker-toggle matIconSuffix [for]="pickerEmissione"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerEmissione></mat-datepicker>
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Titolo</mat-label>
                   <input matInput formControlName="titolo" required />
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Motivo attestazione</mat-label>
-                  <input matInput formControlName="siAttestaChe" required />
                   <mat-error>Campo obbligatorio!</mat-error>
                 </mat-form-field>
               </div>
@@ -317,13 +338,7 @@
                 <span id="modal-carica3"></span>
               </p>
             </div>
-            <div class="col-lg-6 col-md-6 col-12">
-              <p class="detail-item">
-                <i class="bi bi-calendar-date"></i>
-                <strong>Data Emissione: </strong>
-                <span id="modal-dataEmissione"></span>
-              </p>
-            </div>
+            
           </div>
         </div>
         <div class="modal-footer">

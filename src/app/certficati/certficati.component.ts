@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -84,37 +84,41 @@ export const IT_DATE_FORMATS = {
       { provide: MAT_DATE_FORMATS, useValue: IT_DATE_FORMATS },
     ],
 })
-export class CertficatiComponent {
+export class CertficatiComponent implements OnInit {
   dataSource: MatTableDataSource<Certificato>;
-  savedData: any[] = [];
+  savedData: Certificato[] = [];
   displayedColumns: string[] = [
     'id',
     'tipoCertificato',
     'titolo',
+    'siAttestaChe',
     'sottotitolo',
+    'luogoFormazione',
+    'sottotitolo2',
     'carica1',
     'carica2',
     'carica3',
+    'createdBy',
+    'actions'
   ];
   form: FormGroup;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<FormGroup>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   authService = inject(AuthService);
-  user = this.authService.user.asReadonly();
+  loggedInUser = this.authService.user.asReadonly();
   isEditMode: boolean = false;
 
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private fb: FormBuilder,
     private certService: CertService,
+    private datePipe: DatePipe
   ) {
     this.dataSource = new MatTableDataSource(this.savedData);
 
     this.form = this.fb.group({
       id: [undefined],
-      dataEmissione: [new Date(), Validators.required],
-      createdBy: [this.user],
       tipoCertificato: ['', Validators.required],
       titolo: ['', Validators.required],
       siAttestaChe: ['', Validators.required],
@@ -129,9 +133,15 @@ export class CertficatiComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.sort.active = 'id';
-    this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
+
+    setTimeout(() => {
+      if (this.sort) {
+        this.sort.active = 'id';
+        this.sort.direction = 'desc';
+      }
+    });
+
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const tokens = filter.split(' ');
       return tokens.every((token) => {
@@ -146,194 +156,233 @@ export class CertficatiComponent {
     this.dateAdapter.setLocale('it-IT');
   }
 
-  
   loadCert(): void {
     this.certService.getCertificati().subscribe({
       next: (data) => {
+        console.log('Certificate Templates loaded:', data);
         this.savedData = data;
         this.dataSource.data = this.savedData;
       },
       error: (err) => {
-        console.error('Errore durante il caricamento dei certificati:', err);
+        console.error('Errore caricamento modelli certificato:', err);
       },
     });
   }
-  
+
   onSubmit() {
-      if (this.form.valid) {
-        const certData = this.form.value;
-        certData.createdBy = this.user();
-  console.log(certData);
-        if (this.isEditMode) {
-          this.certService.updateCertificato(certData.id, certData).subscribe({
-            next: () => {
-              this.loadCert();
-              this.resetForm();
-              Swal.fire(
-                'Aggiornato',
-                'Utente aggiornato con successo!',
-                'success'
-              );
-            },
-            error: (err) => {
-              console.error("Errore durante l'aggiornamento del certificato:", err);
-              Swal.fire(
-                'Errore',
-                "Si è verificato un errore durante l'aggiornamento del certficato.",
-                'error'
-              );
-            },
-          });
-        } else {
-          this.certService.addCertificati(certData).subscribe({
-            next: () => {
-              this.loadCert();
-              this.resetForm();
-              Swal.fire('Salvato', 'Utente salvato con successo!', 'success');
-            },
-            error: (err) => {
-              console.error("Errore durante il salvataggio del certificato:", err);
-              Swal.fire(
-                'Errore',
-                'Si è verificato un errore durante il salvataggio o un utente con questo codice fiscale esiste già.',
-                'error'
-              );
-            },  
-          });
-        }
-        this.closeFormModal();
+    if (this.form.valid) {
+      const formValue = this.form.value;
+
+      const certificateTemplate: Partial<Certificato> = {
+        id: this.isEditMode ? formValue.id : undefined,
+        tipoCertificato: formValue.tipoCertificato,
+        titolo: formValue.titolo,
+        siAttestaChe: formValue.siAttestaChe,
+        sottotitolo: formValue.sottotitolo,
+        luogoFormazione: formValue.luogoFormazione,
+        sottotitolo2: formValue.sottotitolo2,
+        carica1: formValue.carica1,
+        carica2: formValue.carica2,
+        carica3: formValue.carica3,
+      };
+
+      console.log('Certificate template to save:', certificateTemplate);
+
+      if (this.isEditMode) {
+        this.certService.updateCertificato(certificateTemplate.id!, certificateTemplate as Certificato).subscribe({
+          next: () => {
+            this.loadCert();
+            this.resetForm();
+            this.closeFormModal();
+            Swal.fire('Aggiornato', 'Modello certificato aggiornato!', 'success');
+          },
+          error: (err) => {
+            console.error("Errore aggiornamento modello:", err);
+            Swal.fire('Errore', 'Errore aggiornamento modello.', 'error');
+          }
+        });
+      } else {
+        delete certificateTemplate.id;
+        this.certService.addCertificati(certificateTemplate as Certificato).subscribe({
+          next: () => {
+            this.loadCert();
+            this.resetForm();
+            this.closeFormModal();
+            Swal.fire('Salvato', 'Modello certificato creato!', 'success');
+          },
+          error: (err) => {
+            console.error("Errore salvataggio modello:", err);
+            Swal.fire('Errore', 'Errore salvataggio modello.', 'error');
+          }
+        });
       }
+    } else {
+      console.error('Form is invalid');
     }
-  
+  }
 
-  
-    // Added resetForm method
-    resetForm(): void {
-      this.isEditMode = false;
-      this.form.reset();
+  resetForm(): void {
+    this.isEditMode = false;
+    this.form.reset();
+  }
+
+  populateForm(element: Certificato): void {
+    console.log('Populating form with template:', element);
+    this.form.patchValue({
+      id: element.id,
+      tipoCertificato: element.tipoCertificato,
+      titolo: element.titolo,
+      siAttestaChe: element.siAttestaChe,
+      sottotitolo: element.sottotitolo,
+      luogoFormazione: element.luogoFormazione,
+      sottotitolo2: element.sottotitolo2,
+      carica1: element.carica1,
+      carica2: element.carica2,
+      carica3: element.carica3,
+    });
+  }
+
+  formatDate(event: any): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+
+    if (input.value.length >= 2 && input.value.length <= 4) {
+      input.value = input.value.replace(/(\d{2})(\d{0,2})/, '$1/$2');
+    } else if (input.value.length > 4 && input.value.length <= 8) {
+      input.value = input.value.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
     }
+  }
 
+  formatPaste(event: ClipboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const pastedData = event.clipboardData?.getData('text') || '';
+    const cleanData = pastedData.replace(/[^0-9]/g, '');
+    input.value = cleanData;
+    this.formatDate({ target: input });
+  }
 
-    populateForm(element: Certificato): void {
-      this.form.patchValue({
-        id: element.id,
-        createdBy: element.createdBy,
-        dataEmissione: element.dataEmissione,
-        tipoCertificato: element.tipoCertificato,
-        titolo: element.titolo,
-        siAttestaChe: element.siAttestaChe,
-        sottotitolo: element.sottotitolo,
-        luogoFormazione: element.luogoFormazione,
-        sottotitolo2: element.sottotitolo2,
-        carica1: element.carica1,
-        carica2: element.carica2,
-        carica3: element.carica3,
-      });
-    }
-
-    formatDate(event: any): void {
-      const input = event.target as HTMLInputElement;
-      input.value = input.value.replace(/[^0-9]/g, '');
-  
-      if (input.value.length >= 2 && input.value.length <= 4) {
-        input.value = input.value.replace(/(\d{2})(\d{0,2})/, '$1/$2');
-      } else if (input.value.length > 4 && input.value.length <= 8) {
-        input.value = input.value.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
+  deleteData(data: Certificato): void {
+    Swal.fire({
+      title: 'Sei sicuro?',
+      text: 'Una volta eliminato, non sarà più possibile recuperare i dati di questo utente!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Elimina!',
+      cancelButtonText: 'Annulla',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.certService.deleteCertificato(data.id).subscribe({
+          next: () => {
+            this.loadCert();
+            Swal.fire('Eliminato!', 'Il dato è stato eliminato.', 'success');
+          },
+          error: (err) => {
+            console.error("Errore durante l'eliminazione del certificato:", err);
+            Swal.fire(
+              'Errore',
+              "Si è verificato un errore durante l'eliminazione del certificato.",
+              'error'
+            );
+          },
+        });
+      } else {
+        Swal.fire('Annullato', "L'eliminazione è stata annullata.", 'info');
       }
-    }
+    });
+  }
 
-    formatPaste(event: ClipboardEvent): void {
-      const input = event.target as HTMLInputElement;
-      const pastedData = event.clipboardData?.getData('text') || '';
-      const cleanData = pastedData.replace(/[^0-9]/g, '');
-      input.value = cleanData;
-      this.formatDate({ target: input });
-    }
+  openDetailModal(element: Certificato): void {
+    document.getElementById('modal-tipoCertificato')!.textContent = element.tipoCertificato || 'N/A';
+    document.getElementById('modal-carica1')!.textContent = element.carica1 || 'N/A';
+    document.getElementById('modal-carica2')!.textContent = element.carica2 || 'N/A';
+    document.getElementById('modal-carica3')!.textContent = element.carica3 || 'N/A';
+    document.getElementById('modal-luogoFormazione')!.textContent = element.luogoFormazione || 'N/A';
+    document.getElementById('modal-siAttestaChe')!.textContent = element.siAttestaChe || 'N/A';
+    document.getElementById('modal-sottotitolo')!.textContent = element.sottotitolo || 'N/A';
+    document.getElementById('modal-sottotitolo2')!.textContent = element.sottotitolo2 || 'N/A';
+    document.getElementById('modal-titolo')!.textContent = element.titolo || 'N/A';
 
-    deleteData(data: Certificato): void {
-      Swal.fire({
-        title: 'Sei sicuro?',
-        text: 'Una volta eliminato, non sarà più possibile recuperare i dati di questo utente!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Elimina!',
-        cancelButtonText: 'Annulla',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.certService.deleteCertificato(data.id).subscribe({
-            next: () => {
-              this.loadCert();
-              Swal.fire('Eliminato!', 'Il dato è stato eliminato.', 'success');
-            },
-            error: (err) => {
-              console.error("Errore durante l'eliminazione del certificato:", err);
-              Swal.fire(
-                'Errore',
-                "Si è verificato un errore durante l'eliminazione del certificato.",
-                'error'
-              );
-            },
-          });
-        } else {
-          Swal.fire('Annullato', "L'eliminazione è stata annullata.", 'info');
-        }
-      });
-    }
-
-    openDetailModal(element: Certificato) {
-      document.getElementById('modal-tipoCertificato')!.textContent = element.tipoCertificato;
-      document.getElementById('modal-carica1')!.textContent = element.carica1;
-      document.getElementById('modal-carica2')!.textContent = element.carica2;
-      document.getElementById('modal-carica3')!.textContent = element.carica3;
-      document.getElementById('modal-luogoFormazione')!.textContent = element.luogoFormazione;
-      document.getElementById('modal-siAttestaChe')!.textContent = element.siAttestaChe;
-      document.getElementById('modal-sottotitolo')!.textContent = element.sottotitolo;
-      document.getElementById('modal-sottotitolo2')!.textContent = element.sottotitolo2;
-      document.getElementById('modal-titolo')!.textContent = element.titolo;
-      
-      // Format the date properly
-      const datePipe = new DatePipe('it-IT');
-      const formattedDate = datePipe.transform(element.dataEmissione, 'dd/MM/yyyy');
-      document.getElementById('modal-dataEmissione')!.textContent = formattedDate || '';
-      
-      const modal = new bootstrap.Modal(document.getElementById('detailModal')!);
+    const modalElement = document.getElementById('detailModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
       modal.show();
     }
+  }
 
+  search(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.dataSource.filter = filterValue;
+    this.table.renderRows();
+  }
 
-    search(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value
-        .trim()
-        .toLowerCase();
-      this.dataSource.filter = filterValue;
-      this.table.renderRows();
+  openFormModal(): void {
+    this.isEditMode = false;
+    this.form.reset();
+    const modalElement = document.getElementById('formModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
     }
+  }
 
-    openFormModal() {
-      this.isEditMode = false;
-      this.resetForm();
-      const modal = document.getElementById('formModal');
-      if (modal) {
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
+  closeFormModal(): void {
+    const modalElement = document.getElementById('formModal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      modal?.hide();
+    }
+  }
+
+  editUser(element: any) {
+    this.isEditMode = true;
+    this.form.patchValue(element);
+    this.openFormModal();
+  }
+
+  formatDateForDisplay(date: Date | string | undefined): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
+  }
+
+  openEditModal(element: Certificato): void {
+    this.isEditMode = true;
+    this.populateForm(element);
+    const modalElement = document.getElementById('formModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  generatePDF(element: Certificato): void {
+    const docDefinition = {
+      content: [
+        { text: element.titolo || 'Certificato', style: 'header' },
+        { text: '\n' },
+        { text: `Si attesta che: ${element.siAttestaChe || ''}`, style: 'normal' },
+        { text: '\n' },
+        { text: `Tipo Certificato: ${element.tipoCertificato || ''}`, style: 'normal' },
+
+        { text: `Sottotitolo: ${element.sottotitolo || ''}`, style: 'normal' },
+        { text: `Luogo Formazione: ${element.luogoFormazione || ''}`, style: 'normal' },
+        { text: `Sottotitolo 2: ${element.sottotitolo2 || ''}`, style: 'normal' },
+        { text: '\n' },
+        { text: 'Firme:', style: 'subheader' },
+        { text: `Carica 1: ${element.carica1 || ''}`, style: 'normal' },
+        { text: `Carica 2: ${element.carica2 || ''}`, style: 'normal' },
+        { text: `Carica 3: ${element.carica3 || ''}`, style: 'normal' },
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 20] },
+        subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
+        normal: { fontSize: 12, margin: [0, 0, 0, 5] },
       }
-    }
+    };
 
-    closeFormModal() {
-      const modal = document.getElementById('formModal');
-      if (modal) {
-        const bsModal = bootstrap.Modal.getInstance(modal);
-        if (bsModal) {
-          bsModal.hide();
-        }
-      }
-    }
-
-    editUser(element: any) {
-      this.isEditMode = true;
-      this.form.patchValue(element);
-      this.openFormModal();
-    }
+    pdfMake.createPdf(docDefinition as any).download(`Certificato_${element.id}.pdf`);
+  }
 }

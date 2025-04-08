@@ -315,7 +315,7 @@ mat-form-field {
   td {
     font-family: $body-font;
     border-bottom: 1px solid $hover-color;
-    padding: 10px !important;
+    padding: 8px 12px !important;
 
     @media (max-width: 768px) {
       font-size: 0.9rem;
@@ -487,4 +487,11 @@ mat-form-field {
 
 ::ng-deep .mat-mdc-select-panel-backdrop {
   z-index: 9998 !important;
+}
+
+td.mat-mdc-cell,
+ th.mat-mdc-header-cell {
+  padding: 8px 12px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }

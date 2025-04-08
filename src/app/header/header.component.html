@@ -12,6 +12,11 @@
         >Certificati</a
       >
       }
+      @if(router.url !== '/unified-certificates' && user()) {
+      <a (click)="navigateTo('/unified-certificates')" class="nav-link"
+        >Certificati Unificati</a
+      >
+      }
       @if (router.url !== '/chi-siamo') {
       <a (click)="navigateTo('/chi-siamo')" class="nav-link">Chi Siamo</a>
       } 

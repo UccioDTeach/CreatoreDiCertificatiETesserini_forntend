@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { AuthComponent } from './auth/auth.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CertficatiComponent } from './certficati/certficati.component';
+import { UnifiedCertificatesComponent } from './unified-certificates/unified-certificates.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -23,6 +24,11 @@ export const routes: Routes = [
   {
     path: 'certificati', 
     component: CertficatiComponent, 
+    canActivate: [authGuard]
+  },
+  {
+    path: 'unified-certificates',
+    component: UnifiedCertificatesComponent,
     canActivate: [authGuard]
   },
   { path: '**', redirectTo: 'home' }

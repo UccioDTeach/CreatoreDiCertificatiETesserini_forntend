@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Genera Certificato Unificato</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="selectionForm" (ngSubmit)="generateUnifiedPDF()">
+        <div class="row">
+          <!-- User Selection -->
+          <div class="col-md-6 col-12 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Seleziona Utente</mat-label>
+              <mat-select formControlName="selectedUserId" required>
+                <mat-option>-- Nessuno --</mat-option> <!-- Optional clear option -->
+                <mat-option *ngFor="let user of utentiList" [value]="user.id">
+                  {{user.name}} {{user.cognome}} ({{user.codiceFiscale}})
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="selectionForm.controls['selectedUserId'].hasError('required')">
+                Selezionare un utente.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Certificate Template Selection -->
+          <div class="col-md-6 col-12 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Seleziona Modello Certificato</mat-label>
+              <mat-select formControlName="selectedTemplateId" required>
+                 <mat-option>-- Nessuno --</mat-option> <!-- Optional clear option -->
+                 <mat-option *ngFor="let template of certificatoTemplates" [value]="template.id">
+                  {{template.tipoCertificato}} - {{template.titolo}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="selectionForm.controls['selectedTemplateId'].hasError('required')">
+                Selezionare un modello.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="d-flex justify-content-center mt-4">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="selectionForm.invalid"
+            class="btn-primary"
+          >
+            <mat-icon class="me-1">picture_as_pdf</mat-icon>
+            Genera PDF Unificato
+          </button>
+        </div>
+      </form>
+
+      <!-- Table Removed -->
+
+    </mat-card-content>
+  </mat-card>
+</div> 

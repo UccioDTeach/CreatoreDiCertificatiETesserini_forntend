@@ -1,17 +1,19 @@
 import UtenteRegistrato from './utenteRegistrato.model';
+// import Utente from './utente.model'; // Removed
 
 type Certificato = {
   id: number;
 
-  createdBy: UtenteRegistrato | null;
+  createdBy: UtenteRegistrato | null; // User who created the record
+  // utente?: Utente | null; // Removed
 
   tipoCertificato: string;
 
-  dataEmissione: Date;
+  dataEmissione?: Date; // Make optional or remove if not used
 
   titolo: string;
 
-  siAttestaChe: string;
+  siAttestaChe: string; // Added back
 
   sottotitolo: string;
 
