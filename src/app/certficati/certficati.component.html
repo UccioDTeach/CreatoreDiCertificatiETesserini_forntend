@@ -2,16 +2,21 @@
   <div class="container-fluid px-3">
     <!-- Add button to open modal -->
     <div class="d-flex justify-content-end mt-4">
-      <button mat-raised-button color="primary" (click)="openFormModal()" class="btn-primary">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openFormModal()"
+        class="btn-primary"
+      >
         <mat-icon class="me-1">add</mat-icon>
         Aggiungi Certificato
       </button>
     </div>
-  
+
     <div class="d-flex justify-content-center mt-5">
       <h4 class="section-title">Cerca Certificato</h4>
     </div>
-  
+
     <div class="d-flex justify-content-center mt-4">
       <mat-form-field class="search-field" appearance="outline">
         <mat-label>Filtra</mat-label>
@@ -23,7 +28,7 @@
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </div>
-  
+
     <mat-card class="mt-5 p-4 students-card">
       <h3 class="mb-4 card-title">
         <mat-icon class="me-2">school</mat-icon>
@@ -41,55 +46,78 @@
             <td mat-cell *matCellDef="let element">{{ element.id }}</td>
           </ng-container>
           <ng-container matColumnDef="tipoCertificato">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo certificato</th>
-            <td mat-cell *matCellDef="let element">{{ element.tipoCertificato }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Tipo certificato
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.tipoCertificato }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="titolo">
-             <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
-             <td mat-cell *matCellDef="let element"> {{element.titolo}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Titolo</th>
+            <td mat-cell *matCellDef="let element">{{ element.titolo }}</td>
           </ng-container>
           <ng-container matColumnDef="siAttestaChe">
-            <th mat-header-cell *matHeaderCellDef> Si Attesta Che </th>
-            <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.siAttestaChe}} </td>
+            <th mat-header-cell *matHeaderCellDef>Si Attesta Che</th>
+            <td mat-cell *matCellDef="let element" class="truncate-text">
+              {{ element.siAttestaChe }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="sottotitolo">
-             <th mat-header-cell *matHeaderCellDef> Sottotitolo </th>
-             <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.sottotitolo}} </td>
+            <th mat-header-cell *matHeaderCellDef>Sottotitolo</th>
+            <td mat-cell *matCellDef="let element" class="truncate-text">
+              {{ element.sottotitolo }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="luogoFormazione">
-            <th mat-header-cell *matHeaderCellDef> Luogo Formazione </th>
-            <td mat-cell *matCellDef="let element"> {{element.luogoFormazione}} </td>
+            <th mat-header-cell *matHeaderCellDef>Luogo Formazione</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.luogoFormazione }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="sottotitolo2">
-            <th mat-header-cell *matHeaderCellDef> Sottotitolo 2 </th>
-            <td mat-cell *matCellDef="let element" class="truncate-text"> {{element.sottotitolo2}} </td>
+            <th mat-header-cell *matHeaderCellDef>Sottotitolo 2</th>
+            <td mat-cell *matCellDef="let element" class="truncate-text">
+              {{ element.sottotitolo2 }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="carica1">
-             <th mat-header-cell *matHeaderCellDef> Carica 1 </th>
-             <td mat-cell *matCellDef="let element"> {{element.carica1}} </td>
+            <th mat-header-cell *matHeaderCellDef>Carica 1</th>
+            <td mat-cell *matCellDef="let element">{{ element.carica1 }}</td>
           </ng-container>
           <ng-container matColumnDef="carica2">
-             <th mat-header-cell *matHeaderCellDef> Carica 2 </th>
-             <td mat-cell *matCellDef="let element"> {{element.carica2}} </td>
+            <th mat-header-cell *matHeaderCellDef>Carica 2</th>
+            <td mat-cell *matCellDef="let element">{{ element.carica2 }}</td>
           </ng-container>
           <ng-container matColumnDef="carica3">
-             <th mat-header-cell *matHeaderCellDef> Carica 3 </th>
-             <td mat-cell *matCellDef="let element"> {{element.carica3}} </td>
-          </ng-container>
-          <ng-container matColumnDef="createdBy">
-            <th mat-header-cell *matHeaderCellDef> Creato Da </th>
-            <td mat-cell *matCellDef="let element"> {{element.createdBy?.email || 'N/A'}} </td>
+            <th mat-header-cell *matHeaderCellDef>Carica 3</th>
+            <td mat-cell *matCellDef="let element">{{ element.carica3 }}</td>
           </ng-container>
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Azioni </th>
+            <th mat-header-cell *matHeaderCellDef>Azioni</th>
             <td mat-cell *matCellDef="let element">
-              <button mat-icon-button (click)="openEditModal(element)" color="primary" matTooltip="Modifica">
+              <button
+                mat-icon-button
+                (click)="openEditModal(element)"
+                color="primary"
+                matTooltip="Modifica"
+              >
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button (click)="deleteData(element)" color="warn" matTooltip="Elimina">
+              <button
+                mat-icon-button
+                (click)="deleteData(element)"
+                color="warn"
+                matTooltip="Elimina"
+              >
                 <mat-icon>delete</mat-icon>
               </button>
-              <button mat-icon-button (click)="openDetailModal(element)" color="accent" matTooltip="Visualizza">
+              <button
+                mat-icon-button
+                (click)="openDetailModal(element)"
+                color="accent"
+                matTooltip="Visualizza"
+              >
                 <mat-icon>visibility</mat-icon>
               </button>
             </td>
@@ -107,7 +135,6 @@
               'carica1',
               'carica2',
               'carica3',
-              'createdBy',
               'actions'
             ]"
           ></tr>
@@ -126,7 +153,7 @@
                 'carica1',
                 'carica2',
                 'carica3',
-                'createdBy',
+
                 'actions'
               ]
             "
@@ -141,12 +168,10 @@
         showFirstLastButtons
         aria-label="Seleziona pagina di certificati"
       ></mat-paginator>
-      <div class="d-flex justify-content-end mt-4">
-
-      </div>
+      <div class="d-flex justify-content-end mt-4"></div>
     </mat-card>
   </div>
-  
+
   <!-- Form Modal -->
   <div
     class="modal fade"
@@ -159,10 +184,15 @@
       <div class="modal-content shadow-lg rounded-3">
         <div class="modal-header text-black">
           <h5 class="modal-title d-flex align-items-center" id="formModalLabel">
-            <i class="bi bi-info-circle me-2"></i> 
+            <i class="bi bi-info-circle me-2"></i>
             {{ isEditMode ? "Modifica Certificato" : "Aggiungi Certificato" }}
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -257,7 +287,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Detail Modal -->
   <div
     class="modal fade"
@@ -269,7 +299,10 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content shadow-lg rounded-3">
         <div class="modal-header text-black">
-          <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
+          <h5
+            class="modal-title d-flex align-items-center"
+            id="detailModalLabel"
+          >
             <i class="bi bi-info-circle me-2"></i> Dettagli Certificato
           </h5>
         </div>
@@ -338,16 +371,18 @@
                 <span id="modal-carica3"></span>
               </p>
             </div>
-            
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
             Chiudi
           </button>
         </div>
       </div>
     </div>
   </div>
-  
 </body>

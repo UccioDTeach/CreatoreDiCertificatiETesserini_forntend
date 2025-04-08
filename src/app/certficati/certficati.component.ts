@@ -16,9 +16,7 @@ import {
   MatNativeDateModule,
   MatOptionModule,
 } from '@angular/material/core';
-import {
-  MatDatepickerModule
-} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -74,15 +72,15 @@ export const IT_DATE_FORMATS = {
     MatOptionModule,
     MatSelectModule,
     MatExpansionModule,
-    MatTooltipModule
-],
+    MatTooltipModule,
+  ],
   templateUrl: './certficati.component.html',
   styleUrl: './certficati.component.scss',
-    providers: [
-      [DatePipe],
-      { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
-      { provide: MAT_DATE_FORMATS, useValue: IT_DATE_FORMATS },
-    ],
+  providers: [
+    [DatePipe],
+    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
+    { provide: MAT_DATE_FORMATS, useValue: IT_DATE_FORMATS },
+  ],
 })
 export class CertficatiComponent implements OnInit {
   dataSource: MatTableDataSource<Certificato>;
@@ -98,8 +96,7 @@ export class CertficatiComponent implements OnInit {
     'carica1',
     'carica2',
     'carica3',
-    'createdBy',
-    'actions'
+    'actions',
   ];
   form: FormGroup;
   @ViewChild(MatSort) sort!: MatSort;
@@ -108,7 +105,7 @@ export class CertficatiComponent implements OnInit {
   authService = inject(AuthService);
   loggedInUser = this.authService.user.asReadonly();
   isEditMode: boolean = false;
-
+  user = this.authService.user.asReadonly();
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private fb: FormBuilder,
@@ -128,6 +125,7 @@ export class CertficatiComponent implements OnInit {
       carica1: ['', Validators.required],
       carica2: ['', Validators.required],
       carica3: ['', Validators.required],
+      createdBy: [this.user()],
     });
   }
 
@@ -172,7 +170,7 @@ export class CertficatiComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       const formValue = this.form.value;
-
+      const currentUser = this.user();
       const certificateTemplate: Partial<Certificato> = {
         id: this.isEditMode ? formValue.id : undefined,
         tipoCertificato: formValue.tipoCertificato,
@@ -184,37 +182,49 @@ export class CertficatiComponent implements OnInit {
         carica1: formValue.carica1,
         carica2: formValue.carica2,
         carica3: formValue.carica3,
+        createdBy: currentUser,
       };
 
       console.log('Certificate template to save:', certificateTemplate);
 
       if (this.isEditMode) {
-        this.certService.updateCertificato(certificateTemplate.id!, certificateTemplate as Certificato).subscribe({
-          next: () => {
-            this.loadCert();
-            this.resetForm();
-            this.closeFormModal();
-            Swal.fire('Aggiornato', 'Modello certificato aggiornato!', 'success');
-          },
-          error: (err) => {
-            console.error("Errore aggiornamento modello:", err);
-            Swal.fire('Errore', 'Errore aggiornamento modello.', 'error');
-          }
-        });
+        this.certService
+          .updateCertificato(
+            certificateTemplate.id!,
+            certificateTemplate as Certificato
+          )
+          .subscribe({
+            next: () => {
+              this.loadCert();
+              this.resetForm();
+              this.closeFormModal();
+              Swal.fire(
+                'Aggiornato',
+                'Modello certificato aggiornato!',
+                'success'
+              );
+            },
+            error: (err) => {
+              console.error('Errore aggiornamento modello:', err);
+              Swal.fire('Errore', 'Errore aggiornamento modello.', 'error');
+            },
+          });
       } else {
         delete certificateTemplate.id;
-        this.certService.addCertificati(certificateTemplate as Certificato).subscribe({
-          next: () => {
-            this.loadCert();
-            this.resetForm();
-            this.closeFormModal();
-            Swal.fire('Salvato', 'Modello certificato creato!', 'success');
-          },
-          error: (err) => {
-            console.error("Errore salvataggio modello:", err);
-            Swal.fire('Errore', 'Errore salvataggio modello.', 'error');
-          }
-        });
+        this.certService
+          .addCertificati(certificateTemplate as Certificato)
+          .subscribe({
+            next: () => {
+              this.loadCert();
+              this.resetForm();
+              this.closeFormModal();
+              Swal.fire('Salvato', 'Modello certificato creato!', 'success');
+            },
+            error: (err) => {
+              console.error('Errore salvataggio modello:', err);
+              Swal.fire('Errore', 'Errore salvataggio modello.', 'error');
+            },
+          });
       }
     } else {
       console.error('Form is invalid');
@@ -279,7 +289,10 @@ export class CertficatiComponent implements OnInit {
             Swal.fire('Eliminato!', 'Il dato è stato eliminato.', 'success');
           },
           error: (err) => {
-            console.error("Errore durante l'eliminazione del certificato:", err);
+            console.error(
+              "Errore durante l'eliminazione del certificato:",
+              err
+            );
             Swal.fire(
               'Errore',
               "Si è verificato un errore durante l'eliminazione del certificato.",
@@ -294,15 +307,24 @@ export class CertficatiComponent implements OnInit {
   }
 
   openDetailModal(element: Certificato): void {
-    document.getElementById('modal-tipoCertificato')!.textContent = element.tipoCertificato || 'N/A';
-    document.getElementById('modal-carica1')!.textContent = element.carica1 || 'N/A';
-    document.getElementById('modal-carica2')!.textContent = element.carica2 || 'N/A';
-    document.getElementById('modal-carica3')!.textContent = element.carica3 || 'N/A';
-    document.getElementById('modal-luogoFormazione')!.textContent = element.luogoFormazione || 'N/A';
-    document.getElementById('modal-siAttestaChe')!.textContent = element.siAttestaChe || 'N/A';
-    document.getElementById('modal-sottotitolo')!.textContent = element.sottotitolo || 'N/A';
-    document.getElementById('modal-sottotitolo2')!.textContent = element.sottotitolo2 || 'N/A';
-    document.getElementById('modal-titolo')!.textContent = element.titolo || 'N/A';
+    document.getElementById('modal-tipoCertificato')!.textContent =
+      element.tipoCertificato || 'N/A';
+    document.getElementById('modal-carica1')!.textContent =
+      element.carica1 || 'N/A';
+    document.getElementById('modal-carica2')!.textContent =
+      element.carica2 || 'N/A';
+    document.getElementById('modal-carica3')!.textContent =
+      element.carica3 || 'N/A';
+    document.getElementById('modal-luogoFormazione')!.textContent =
+      element.luogoFormazione || 'N/A';
+    document.getElementById('modal-siAttestaChe')!.textContent =
+      element.siAttestaChe || 'N/A';
+    document.getElementById('modal-sottotitolo')!.textContent =
+      element.sottotitolo || 'N/A';
+    document.getElementById('modal-sottotitolo2')!.textContent =
+      element.sottotitolo2 || 'N/A';
+    document.getElementById('modal-titolo')!.textContent =
+      element.titolo || 'N/A';
 
     const modalElement = document.getElementById('detailModal');
     if (modalElement) {
@@ -363,13 +385,25 @@ export class CertficatiComponent implements OnInit {
       content: [
         { text: element.titolo || 'Certificato', style: 'header' },
         { text: '\n' },
-        { text: `Si attesta che: ${element.siAttestaChe || ''}`, style: 'normal' },
+        {
+          text: `Si attesta che: ${element.siAttestaChe || ''}`,
+          style: 'normal',
+        },
         { text: '\n' },
-        { text: `Tipo Certificato: ${element.tipoCertificato || ''}`, style: 'normal' },
+        {
+          text: `Tipo Certificato: ${element.tipoCertificato || ''}`,
+          style: 'normal',
+        },
 
         { text: `Sottotitolo: ${element.sottotitolo || ''}`, style: 'normal' },
-        { text: `Luogo Formazione: ${element.luogoFormazione || ''}`, style: 'normal' },
-        { text: `Sottotitolo 2: ${element.sottotitolo2 || ''}`, style: 'normal' },
+        {
+          text: `Luogo Formazione: ${element.luogoFormazione || ''}`,
+          style: 'normal',
+        },
+        {
+          text: `Sottotitolo 2: ${element.sottotitolo2 || ''}`,
+          style: 'normal',
+        },
         { text: '\n' },
         { text: 'Firme:', style: 'subheader' },
         { text: `Carica 1: ${element.carica1 || ''}`, style: 'normal' },
@@ -377,12 +411,19 @@ export class CertficatiComponent implements OnInit {
         { text: `Carica 3: ${element.carica3 || ''}`, style: 'normal' },
       ],
       styles: {
-        header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 20] },
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 20],
+        },
         subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
         normal: { fontSize: 12, margin: [0, 0, 0, 5] },
-      }
+      },
     };
 
-    pdfMake.createPdf(docDefinition as any).download(`Certificato_${element.id}.pdf`);
+    pdfMake
+      .createPdf(docDefinition as any)
+      .download(`Certificato_${element.id}.pdf`);
   }
 }
