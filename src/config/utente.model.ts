@@ -13,6 +13,7 @@ type Utente = {
   istruttore: string;
   codiceCertificato: string;
   createdBy: UtenteRegistrato | null;
+  voto: string;
 };
 
 export default Utente;
