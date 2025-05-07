@@ -2,7 +2,12 @@
   <div class="container-fluid px-3">
     <!-- Add button to open modal -->
     <div class="d-flex justify-content-end mt-4">
-      <button mat-raised-button color="primary" (click)="openFormModal()" class="btn-primary">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openFormModal()"
+        class="btn-primary"
+      >
         <mat-icon class="me-1">add</mat-icon>
         Aggiungi Utente
       </button>
@@ -53,35 +58,26 @@
             <td mat-cell *matCellDef="let element">{{ element.email }}</td>
           </ng-container>
           <ng-container matColumnDef="dataNascita">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data di Nascita</th>
-            <td mat-cell *matCellDef="let element">{{ element.dataNascita | date:'dd/MM/yyyy' }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Data di Nascita
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.dataNascita | date : "dd/MM/yyyy" }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="codiceFiscale">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Codice Fiscale</th>
-            <td mat-cell *matCellDef="let element">{{ element.codiceFiscale }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Codice Fiscale
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.codiceFiscale }}
+            </td>
           </ng-container>
-          <ng-container matColumnDef="dataRilascio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data di Rilascio</th>
-            <td mat-cell *matCellDef="let element">{{ element.dataRilascio | date:'dd/MM/yyyy' }}</td>
-          </ng-container>
-          <ng-container matColumnDef="validita">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Validità</th>
-            <td mat-cell *matCellDef="let element">{{ element.validita | date:'dd/MM/yyyy' }}</td>
-          </ng-container>
-          <ng-container matColumnDef="direttore">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Direttore</th>
-            <td mat-cell *matCellDef="let element">{{ element.direttore }}</td>
-          </ng-container>
-          <ng-container matColumnDef="istruttore">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Istruttore</th>
-            <td mat-cell *matCellDef="let element">{{ element.istruttore }}</td>
-          </ng-container>
-          <ng-container matColumnDef="codiceCertificato">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Codice Certificato</th>
-            <td mat-cell *matCellDef="let element">{{ element.codiceCertificato }}</td>
-          </ng-container>
+
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="text-center">Azioni</th>
+            <th mat-header-cell *matHeaderCellDef class="text-center">
+              Azioni
+            </th>
             <td mat-cell *matCellDef="let element" class="text-center">
               <div class="d-flex justify-content-center gap-2">
                 <button
@@ -120,11 +116,6 @@
               'email',
               'dataNascita',
               'codiceFiscale',
-              'dataRilascio',
-              'validita',
-              'direttore',
-              'istruttore',
-              'codiceCertificato',
               'actions'
             ]"
           ></tr>
@@ -139,11 +130,6 @@
                 'email',
                 'dataNascita',
                 'codiceFiscale',
-                'dataRilascio',
-                'validita',
-                'direttore',
-                'istruttore',
-                'codiceCertificato',
                 'actions'
               ]
             "
@@ -176,7 +162,12 @@
             <i class="bi bi-info-circle me-2"></i>
             {{ isEditMode ? "Modifica Utente" : "Aggiungi Utente" }}
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -205,27 +196,17 @@
               <div class="col-md-6 col-12">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Data di nascita</mat-label>
-                  <input matInput [matDatepicker]="picker" formControlName="dataNascita" required>
-                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    formControlName="dataNascita"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Data di rilascio</mat-label>
-                  <input matInput [matDatepicker]="pickerRilascio" formControlName="dataRilascio" required>
-                  <mat-datepicker-toggle matIconSuffix [for]="pickerRilascio"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerRilascio></mat-datepicker>
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Validità</mat-label>
-                  <input matInput [matDatepicker]="pickerValidita" formControlName="validita" required>
-                  <mat-datepicker-toggle matIconSuffix [for]="pickerValidita"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerValidita></mat-datepicker>
                   <mat-error>Campo obbligatorio!</mat-error>
                 </mat-form-field>
               </div>
@@ -233,35 +214,6 @@
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Codice fiscale</mat-label>
                   <input matInput formControlName="codiceFiscale" required />
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Direttore del Corso</mat-label>
-                  <mat-select formControlName="direttore" required>
-                    <mat-option value="Picone">Picone</mat-option>
-                    <mat-option value="Rocca">Rocca</mat-option>
-                    <mat-option value="Faini">Faini</mat-option>
-                  </mat-select>
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Istruttore</mat-label>
-                  <mat-select formControlName="istruttore" required>
-                    <mat-option value="Picone">Picone</mat-option>
-                    <mat-option value="Rocca">Rocca</mat-option>
-                    <mat-option value="Faini">Faini</mat-option>
-                  </mat-select>
-                  <mat-error>Campo obbligatorio!</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-md-6 col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Codice Certificato</mat-label>
-                  <input matInput formControlName="codiceCertificato" required />
                   <mat-error>Campo obbligatorio!</mat-error>
                 </mat-form-field>
               </div>
@@ -304,7 +256,10 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content shadow-lg rounded-3">
         <div class="modal-header text-black">
-          <h5 class="modal-title d-flex align-items-center" id="detailModalLabel">
+          <h5
+            class="modal-title d-flex align-items-center"
+            id="detailModalLabel"
+          >
             <i class="bi bi-info-circle me-2"></i> Dettagli Utente
           </h5>
         </div>
@@ -347,43 +302,19 @@
             </div>
             <div class="col-lg-6 col-md-6 col-12">
               <p class="detail-item">
-                <i class="bi bi-calendar-check"></i>
-                <strong>Validità: </strong>
-                <span id="modal-validita"></span>
-              </p>
-            </div>
-            <div class="col-lg-6 col-md-6 col-12">
-              <p class="detail-item">
                 <i class="bi bi-person-vcard"></i>
                 <strong>Codice Fiscale: </strong>
                 <span id="modal-cf"></span>
               </p>
             </div>
-            <div class="col-lg-6 col-md-6 col-12">
-              <p class="detail-item">
-                <i class="bi bi-person-badge"></i>
-                <strong>Direttore: </strong>
-                <span id="modal-direttore"></span>
-              </p>
-            </div>
-            <div class="col-lg-6 col-md-6 col-12">
-              <p class="detail-item">
-                <i class="bi bi-person-badge"></i>
-                <strong>Istruttore: </strong>
-                <span id="modal-istruttore"></span>
-              </p>
-            </div>
-            <div class="col-lg-6 col-md-6 col-12">
-              <p class="detail-item">
-                <i class="bi bi-upc"></i>
-                <strong>Codice Certificato: </strong>
-                <span id="modal-codiceCertificato"></span>
-              </p>
-            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
             Chiudi
           </button>
         </div>

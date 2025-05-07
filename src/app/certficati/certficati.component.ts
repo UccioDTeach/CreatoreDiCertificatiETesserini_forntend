@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject, ViewChild, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
@@ -36,6 +37,7 @@ import Swal from 'sweetalert2';
 import Certificato from '../../config/certificato.model';
 import { AuthService } from '../service/auth.service';
 import { CertService } from '../service/cert.service';
+import UtenteRegistrato from '../../config/utenteRegistrato.model';
 declare var bootstrap: any;
 
 (pdfMake as any).vfs = pdfFonts.vfs;
@@ -115,17 +117,17 @@ export class CertficatiComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.savedData);
 
     this.form = this.fb.group({
-      id: [undefined],
-      tipoCertificato: ['', Validators.required],
-      titolo: ['', Validators.required],
-      siAttestaChe: ['', Validators.required],
-      sottotitolo: ['', Validators.required],
-      luogoFormazione: ['', Validators.required],
-      sottotitolo2: ['', Validators.required],
-      carica1: ['', Validators.required],
-      carica2: ['', Validators.required],
-      carica3: ['', Validators.required],
-      createdBy: [this.user()],
+      id: new FormControl<string | undefined>(undefined),
+      tipoCertificato: new FormControl<string | undefined>(undefined),
+      titolo: new FormControl<string | undefined>(undefined),
+      siAttestaChe: new FormControl<string | undefined>(undefined),
+      sottotitolo: new FormControl<string | undefined>(undefined),
+      luogoFormazione: new FormControl<string | undefined>(undefined),
+      sottotitolo2: new FormControl<string | undefined>(undefined),
+      carica1: new FormControl<string | undefined>(undefined),
+      carica2: new FormControl<string | undefined>(undefined),
+      carica3: new FormControl<string | undefined>(undefined),
+      createdBy: new FormControl<UtenteRegistrato>(this.user()!),
     });
   }
 

@@ -118,29 +118,30 @@ export class FormComponent implements OnInit {
     'codiceCertificato',
     'actions',
   ];
+  authService = inject(AuthService);
+  user = this.authService.user.asReadonly();
   form = this.fb.group({
     id: new FormControl<number | undefined>(undefined),
-    name: new FormControl<string | null>(null, Validators.required),
-    cognome: new FormControl<string | null>(null, Validators.required),
-    dataNascita: new FormControl<Date | null>(null, Validators.required),
-    codiceFiscale: new FormControl<string | null>(null, Validators.required),
-    email: new FormControl<string | null>(null, [Validators.email]),
-    dataRilascio: new FormControl<Date | null>(null, Validators.required),
-    validita: new FormControl<Date | null>(null),
-    direttore: new FormControl<string | null>(null, Validators.required),
-    istruttore: new FormControl<string | null>(null, Validators.required),
-    codiceCertificato: new FormControl<string | null>(
-      null,
+    name: new FormControl<string | undefined>(undefined, Validators.required),
+    cognome: new FormControl<string | undefined>(
+      undefined,
       Validators.required
     ),
-    createdBy: new FormControl<UtenteRegistrato | null>(null),
-    voto: new FormControl<string | null>(null),
+    dataNascita: new FormControl<Date | undefined>(
+      undefined,
+      Validators.required
+    ),
+    codiceFiscale: new FormControl<string | undefined>(
+      undefined,
+      Validators.required
+    ),
+    email: new FormControl<string | undefined>(undefined, [Validators.email]),
+    createdBy: new FormControl<UtenteRegistrato>(this.user()!),
+    voto: new FormControl<string | undefined>(undefined),
   });
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<Utente>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  authService = inject(AuthService);
-  user = this.authService.user.asReadonly();
   isEditMode: boolean = false;
 
   constructor(
@@ -168,18 +169,9 @@ export class FormComponent implements OnInit {
         (data.name ?? '') +
         (data.cognome ?? '') +
         (data.email ?? '') +
-        (data.codiceCertificato ?? '') +
         (data.codiceFiscale ?? '') +
-        (data.direttore ?? '') +
-        (data.istruttore ?? '') +
         (data.dataNascita
           ? this.datePipe.transform(data.dataNascita, 'dd/MM/yyyy')
-          : '') +
-        (data.dataRilascio
-          ? this.datePipe.transform(data.dataRilascio, 'dd/MM/yyyy')
-          : '') +
-        (data.validita
-          ? this.datePipe.transform(data.validita, 'dd/MM/yyyy')
           : '')
       ).toLowerCase();
       const transformedFilter = filter.trim().toLowerCase();
@@ -242,17 +234,8 @@ export class FormComponent implements OnInit {
           : '',
         codiceFiscale: rawUserData.codiceFiscale ?? '',
         email: rawUserData.email ?? '',
-        dataRilascio: rawUserData.dataRilascio
-          ? dayjs(rawUserData.dataRilascio).format('YYYY-MM-DD')
-          : '',
-        validita: rawUserData.validita
-          ? dayjs(rawUserData.validita).format('YYYY-MM-DD')
-          : '',
-        direttore: rawUserData.direttore ?? '',
-        istruttore: rawUserData.istruttore ?? '',
-        codiceCertificato: rawUserData.codiceCertificato ?? '',
-        createdBy: currentUser, // Keep full object initially
         voto: rawUserData.voto ?? '',
+        createdBy: currentUser,
       };
 
       if (this.isEditMode) {
@@ -363,13 +346,6 @@ export class FormComponent implements OnInit {
       dataNascita: element.dataNascita ? new Date(element.dataNascita) : null,
       codiceFiscale: element.codiceFiscale ?? null,
       email: element.email ?? null,
-      dataRilascio: element.dataRilascio
-        ? new Date(element.dataRilascio)
-        : null,
-      validita: element.validita ? new Date(element.validita) : null,
-      direttore: element.direttore ?? null,
-      istruttore: element.istruttore ?? null,
-      codiceCertificato: element.codiceCertificato ?? null,
       createdBy: element.createdBy ?? null,
     });
   }
@@ -432,11 +408,6 @@ export class FormComponent implements OnInit {
             `"${this.formatDateForCSV(row.dataNascita)}"`,
             `"${row.codiceFiscale ?? ''}"`,
             `"${row.email ?? ''}"`,
-            `"${this.formatDateForCSV(row.dataRilascio)}"`,
-            `"${this.formatDateForCSV(row.validita)}"`,
-            `"${row.direttore ?? ''}"`,
-            `"${row.istruttore ?? ''}"`,
-            `"${row.codiceCertificato ?? ''}"`,
           ].join(';');
           csvContent += rowData + '\n';
         });
@@ -520,12 +491,6 @@ export class FormComponent implements OnInit {
     const formattedDateNascita = element.dataNascita
       ? dayjs(element.dataNascita).format('DD/MM/YYYY')
       : 'N/A';
-    const formattedDateRilascio = element.dataRilascio
-      ? dayjs(element.dataRilascio).format('DD/MM/YYYY')
-      : 'N/A';
-    const formattedDateValidita = element.validita
-      ? dayjs(element.validita).format('DD/MM/YYYY')
-      : 'N/A';
 
     const updateElementContent = (id: string, content: string) => {
       const element = document.getElementById(id);
@@ -540,15 +505,7 @@ export class FormComponent implements OnInit {
     updateElementContent('modal-cognome', element.cognome ?? 'N/A');
     updateElementContent('modal-email', element.email ?? 'N/A');
     updateElementContent('modal-birthdate', formattedDateNascita);
-    updateElementContent('modal-rilascio', formattedDateRilascio);
-    updateElementContent('modal-validita', formattedDateValidita);
     updateElementContent('modal-cf', element.codiceFiscale ?? 'N/A');
-    updateElementContent('modal-direttore', element.direttore ?? 'N/A');
-    updateElementContent('modal-istruttore', element.istruttore ?? 'N/A');
-    updateElementContent(
-      'modal-codiceCertificato',
-      element.codiceCertificato ?? 'N/A'
-    );
 
     modal.show();
   }
@@ -598,267 +555,11 @@ export class FormComponent implements OnInit {
     });
   }
 
-  onDataRilascioChange(event: MatDatepickerInputEvent<Date>): void {
-    const rilascioDate = event.value;
-    if (
-      rilascioDate &&
-      rilascioDate instanceof Date &&
-      !isNaN(rilascioDate.getTime())
-    ) {
-      const validitaDate = new Date(rilascioDate);
-      validitaDate.setFullYear(validitaDate.getFullYear() + 2);
-      this.form.controls.validita.setValue(validitaDate);
-    } else {
-      this.form.controls.validita.setValue(null);
-    }
-  }
-
   search(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
-    }
-  }
-
-  async decidiDirettoreNome(): Promise<string> {
-    const direttore = this.form.value.direttore;
-    if (!direttore) {
-      this.nomeDirettore = '';
-      return '';
-    }
-    switch (direttore) {
-      case 'Rocca':
-        this.nomeDirettore = 'Francesca Rocca';
-        break;
-      case 'Faini':
-        this.nomeDirettore = 'Daniele Faini';
-        break;
-      case 'Picone':
-        this.nomeDirettore = 'Donato Picone';
-        break;
-      default:
-        this.nomeDirettore = '';
-    }
-    return this.nomeDirettore;
-  }
-
-  async decidiIstruttoreNome(): Promise<string> {
-    const istruttore = this.form.value.istruttore;
-    if (!istruttore) {
-      this.nomeIstruttore = '';
-      return '';
-    }
-    switch (istruttore) {
-      case 'Rocca':
-        this.nomeIstruttore = 'Francesca Rocca';
-        break;
-      case 'Faini':
-        this.nomeIstruttore = 'Daniele Faini';
-        break;
-      case 'Picone':
-        this.nomeIstruttore = 'Donato Picone';
-        break;
-      default:
-        this.nomeIstruttore = '';
-    }
-    return this.nomeIstruttore;
-  }
-
-  async generatePdf() {
-    if (!this.form.valid) {
-      Swal.fire(
-        'Attenzione',
-        'Il form non è valido. Controlla i campi evidenziati.',
-        'warning'
-      );
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    await this.decidiDirettoreNome();
-    await this.decidiIstruttoreNome();
-
-    let image_logoSfondo = '';
-    try {
-      image_logoSfondo = await this.fetchImageAsBase64('logo.png');
-    } catch (error) {
-      console.error('Errore nel recupero immagine per PDF:', error);
-    }
-
-    const formValue = this.form.getRawValue();
-    const name = formValue.name ?? 'N/D';
-    const cognome = formValue.cognome ?? 'N/D';
-    const codiceFiscale = formValue.codiceFiscale ?? 'N/D';
-    const dataRilascioFormatted = formValue.dataRilascio
-      ? dayjs(formValue.dataRilascio).format('DD/MM/YYYY')
-      : 'N/D';
-    const validitaFormatted = formValue.validita
-      ? dayjs(formValue.validita).format('DD/MM/YYYY')
-      : 'N/D';
-    const codiceCertificato = formValue.codiceCertificato ?? 'N/D';
-    const dataRilascioYear = formValue.dataRilascio
-      ? dayjs(formValue.dataRilascio).year()
-      : '-----';
-
-    const documentDefinition: TDocumentDefinitions = {
-      pageSize: 'A4',
-      pageOrientation: 'landscape',
-      background: image_logoSfondo
-        ? [
-            {
-              image: image_logoSfondo,
-              width: 498 * 0.7,
-              height: 501 * 0.7,
-              alignment: 'center',
-              margin: [0, (595.28 - 501 * 0.7) / 2],
-              opacity: 0.1,
-            },
-          ]
-        : undefined,
-      content: [
-        {
-          text: "Verificato l'apprendimeto,",
-          alignment: 'center',
-          bold: true,
-          fontSize: 20,
-        },
-        '\n',
-        {
-          text: 'Si attesta che,',
-          alignment: 'center',
-          bold: true,
-          fontSize: 16,
-        },
-        '\n',
-        {
-          text: `${name.toUpperCase()} ${cognome.toUpperCase()}`,
-          alignment: 'center',
-          fontSize: 20,
-          bold: true,
-        },
-        '\n',
-        {
-          text: `CF (${codiceFiscale.toUpperCase()})`,
-          alignment: 'center',
-          fontSize: 16,
-        },
-        '\n',
-        {
-          text: 'ha superato il corso di lingue Inglese',
-          alignment: 'center',
-          fontSize: 14,
-          bold: true,
-        },
-        '\n',
-        {
-          text: "nell'istituto di formazione Centro Studio Internazionale Lenguages",
-          alignment: 'center',
-          fontSize: 14,
-          bold: true,
-        },
-        {
-          text: 'con esame eseguito ai sensi della legge 4/2013',
-          alignment: 'center',
-          fontSize: 10,
-          bold: true,
-        },
-        '\n',
-        {
-          text: `Data rilascio ${dataRilascioFormatted}`,
-          alignment: 'left',
-          bold: true,
-        },
-        {
-          text: `Validità ${validitaFormatted}`,
-          alignment: 'right',
-          bold: true,
-        },
-        '\n',
-        {
-          table: {
-            widths: ['*', '*', '*'],
-            body: [
-              [
-                {
-                  stack: [
-                    {
-                      text: 'Direttore del Corso',
-                      alignment: 'center',
-                      color: '#fb2424',
-                      bold: true,
-                      fontSize: 14,
-                    },
-                    {
-                      text: this.nomeDirettore,
-                      alignment: 'center',
-                      bold: true,
-                    },
-                  ],
-                  alignment: 'center',
-                },
-                {
-                  stack: [
-                    {
-                      text: 'IL PRESIDE',
-                      alignment: 'center',
-                      color: '#fb2424',
-                      bold: true,
-                      fontSize: 14,
-                    },
-                    { text: 'Tommaso Rello', alignment: 'center', bold: true },
-                  ],
-                  alignment: 'center',
-                },
-                {
-                  stack: [
-                    {
-                      text: 'Istruttore',
-                      alignment: 'center',
-                      color: '#fb2424',
-                      bold: true,
-                      fontSize: 14,
-                    },
-                    {
-                      text: this.nomeIstruttore,
-                      alignment: 'center',
-                      bold: true,
-                    },
-                  ],
-                  alignment: 'center',
-                },
-              ],
-            ],
-          },
-          layout: 'noBorders',
-        },
-        { text: ' ', margin: [0, 40] },
-        {
-          text: `Brevetto N° n.BLSD_${dataRilascioYear}_${codiceCertificato}`,
-          fontSize: 10,
-          alignment: 'right',
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          marginBottom: 15,
-        },
-      },
-    };
-
-    try {
-      pdfMake
-        .createPdf(documentDefinition)
-        .download(`Certificato di ${name}_${cognome}.pdf`);
-    } catch (error) {
-      console.error('Errore durante la generazione del PDF:', error);
-      Swal.fire(
-        'Errore PDF',
-        'Impossibile generare il documento PDF.',
-        'error'
-      );
     }
   }
 

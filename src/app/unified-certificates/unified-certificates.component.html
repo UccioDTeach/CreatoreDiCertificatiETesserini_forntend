@@ -11,12 +11,17 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Seleziona Utente</mat-label>
               <mat-select formControlName="selectedUserId" required>
-                <mat-option>-- Nessuno --</mat-option> <!-- Optional clear option -->
+                <mat-option>-- Nessuno --</mat-option>
+                <!-- Optional clear option -->
                 <mat-option *ngFor="let user of utentiList" [value]="user.id">
-                  {{user.name}} {{user.cognome}} ({{user.codiceFiscale}})
+                  {{ user.name }} {{ user.cognome }} ({{ user.codiceFiscale }})
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="selectionForm.controls['selectedUserId'].hasError('required')">
+              <mat-error
+                *ngIf="
+                  selectionForm.controls['selectedUserId'].hasError('required')
+                "
+              >
                 Selezionare un utente.
               </mat-error>
             </mat-form-field>
@@ -27,12 +32,22 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Seleziona Modello Certificato</mat-label>
               <mat-select formControlName="selectedTemplateId" required>
-                 <mat-option>-- Nessuno --</mat-option> <!-- Optional clear option -->
-                 <mat-option *ngFor="let template of certificatoTemplates" [value]="template.id">
-                  {{template.tipoCertificato}} - {{template.titolo}}
+                <mat-option>-- Nessuno --</mat-option>
+                <!-- Optional clear option -->
+                <mat-option
+                  *ngFor="let template of certificatoTemplates"
+                  [value]="template.id"
+                >
+                  {{ template.tipoCertificato }} - {{ template.titolo }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="selectionForm.controls['selectedTemplateId'].hasError('required')">
+              <mat-error
+                *ngIf="
+                  selectionForm.controls['selectedTemplateId'].hasError(
+                    'required'
+                  )
+                "
+              >
                 Selezionare un modello.
               </mat-error>
             </mat-form-field>
@@ -55,7 +70,6 @@
       </form>
 
       <!-- Table Removed -->
-
     </mat-card-content>
   </mat-card>
-</div> 
+</div>

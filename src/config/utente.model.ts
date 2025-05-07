@@ -7,11 +7,6 @@ type Utente = {
   dataNascita: string;
   codiceFiscale: string;
   email: string;
-  dataRilascio: string;
-  validita: string;
-  direttore: string;
-  istruttore: string;
-  codiceCertificato: string;
   createdBy: UtenteRegistrato | null;
   voto: string;
 };
