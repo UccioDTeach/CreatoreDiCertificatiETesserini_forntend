@@ -11,10 +11,10 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'auth', component: AuthComponent },
-  { 
-    path: 'form', 
-    component: FormComponent, 
-    canActivate: [authGuard] 
+  {
+    path: 'form',
+    component: FormComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'dashboard',
@@ -22,15 +22,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'certificati', 
-    component: CertficatiComponent, 
-    canActivate: [authGuard]
+    path: 'certificati',
+    component: CertficatiComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'unified-certificates',
     component: UnifiedCertificatesComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'home' },
 ];
-  

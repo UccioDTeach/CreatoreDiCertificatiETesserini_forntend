@@ -2,25 +2,19 @@
   <div class="header-container">
     <h1>Certificati Rapidi</h1>
     <nav class="header-nav">
-      @if(router.url !== '/form' && user()) {
-      <a (click)="navigateTo('/form')" class="nav-link"
-        >Utenti </a
-      >
-      }
-      @if(router.url !== '/certificati' && user()) {
-      <a (click)="navigateTo('/certificati')" class="nav-link"
-        >Certificati</a
-      >
-      }
-      @if(router.url !== '/unified-certificates' && user()) {
+      @if(router.url !== '/dashboard' && user()) {
+      <a (click)="navigateTo('/dashboard')" class="nav-link">Dashboard</a>
+      } @if(router.url !== '/form' && user()) {
+      <a (click)="navigateTo('/form')" class="nav-link">Utenti </a>
+      } @if(router.url !== '/certificati' && user()) {
+      <a (click)="navigateTo('/certificati')" class="nav-link">Certificati</a>
+      } @if(router.url !== '/unified-certificates' && user()) {
       <a (click)="navigateTo('/unified-certificates')" class="nav-link"
         >Certificati Unificati</a
       >
-      }
-      @if (router.url !== '/chi-siamo') {
+      } @if (router.url !== '/chi-siamo') {
       <a (click)="navigateTo('/chi-siamo')" class="nav-link">Chi Siamo</a>
-      } 
-      @if(!user()) {
+      } @if(!user()) {
       <button class="btn btn-primary" (click)="navigateTo('/auth')">
         Login
       </button>
